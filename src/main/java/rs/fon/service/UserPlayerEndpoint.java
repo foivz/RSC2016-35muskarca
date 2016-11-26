@@ -8,17 +8,20 @@ package rs.fon.service;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import rs.fon.domain.UserAccount;
 import rs.fon.domain.UserPlayer;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
 import rs.fon.pojo.DarkoResponse;
 import rs.fon.pojo.UserPlayerLoginPojo;
 import rs.fon.pojo.UserPlayerPojo;
+import rs.fon.pojo.UserPojo;
 import rs.fon.token.AbstractTokenCreator;
 import rs.fon.token.Base64Token;
 
@@ -51,6 +54,24 @@ public class UserPlayerEndpoint {
         }
         DarkoResponse dr = new DarkoResponse(true, new UserPlayerPojo(singleResult), null);
         return Response.ok().entity(dr).build();
+    }
+
+    @POST
+    @Path("/pushRegistration")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response pushRegistration(UserPlayerLoginPojo loginPojo) {
+        try {
+            EntityManager em = EMF.createEntityManager();
+            UserPlayer singleResult = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", loginPojo.getSocialnetid()).getSingleResult();
+            singleResult.setPushtoken(loginPojo.getPushtoken());
+            manager.merge(em, singleResult);
+        } catch (NoResultException e) {
+            return Response.ok().entity(new DarkoResponse(false, null, "Korisnik ne postoji.")).build();
+        }
+        DarkoResponse dr = new DarkoResponse(true, null, null);
+        return Response.ok().entity(dr).build();
+
     }
 
 }

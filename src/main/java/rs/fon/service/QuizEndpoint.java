@@ -79,7 +79,7 @@ public class QuizEndpoint {
     public Response getQuiz(@HeaderParam("authorization") String token) {
         EntityManager em = EMF.createEntityManager();
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
-        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.id=:id AND q.enddate > :enddate", Quiz.class).setParameter("enddate", new Date()).setParameter("id", id).getResultList();
+        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.id=:id AND q.enddate < :enddate", Quiz.class).setParameter("enddate", new Date()).setParameter("id", id).getResultList();
         List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
         return Response.ok().entity(dr).build();
