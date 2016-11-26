@@ -39,7 +39,6 @@ public class RegistrationQuizTeam implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "idregistration")
     private Integer idregistration;
     @JoinColumn(name = "idquiz", referencedColumnName = "idquiz")

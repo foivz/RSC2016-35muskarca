@@ -48,7 +48,6 @@ public class Quiz implements Serializable {
     private List<RegistrationQuizTeam> registrationQuizTeamList;
     private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
     @NotNull
     @Column(name = "idquiz")
     private Integer idquiz;

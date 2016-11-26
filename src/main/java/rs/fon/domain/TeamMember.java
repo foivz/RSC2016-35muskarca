@@ -32,13 +32,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class TeamMember implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "idteam_member")
-    private Integer idteamMember;
     @JoinColumn(name = "iduser", referencedColumnName = "iduser_player")
     @ManyToOne
     private UserPlayer iduser;
+    @Id
     @JoinColumn(name = "idteam", referencedColumnName = "idteam")
     @ManyToOne
     private Team idteam;
@@ -46,17 +43,6 @@ public class TeamMember implements Serializable {
     public TeamMember() {
     }
 
-    public TeamMember(Integer idteamMember) {
-        this.idteamMember = idteamMember;
-    }
-
-    public Integer getIdteamMember() {
-        return idteamMember;
-    }
-
-    public void setIdteamMember(Integer idteamMember) {
-        this.idteamMember = idteamMember;
-    }
 
     public UserPlayer getIduser() {
         return iduser;
@@ -77,7 +63,7 @@ public class TeamMember implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idteamMember != null ? idteamMember.hashCode() : 0);
+        hash += (idteam != null ? idteam.hashCode() : 0);
         return hash;
     }
 
@@ -88,7 +74,7 @@ public class TeamMember implements Serializable {
             return false;
         }
         TeamMember other = (TeamMember) object;
-        if ((this.idteamMember == null && other.idteamMember != null) || (this.idteamMember != null && !this.idteamMember.equals(other.idteamMember))) {
+        if ((this.idteam == null && other.idteam != null) || (this.idteam != null && !this.idteam.equals(other.idteam))) {
             return false;
         }
         return true;
@@ -96,7 +82,7 @@ public class TeamMember implements Serializable {
 
     @Override
     public String toString() {
-        return "rs.fon.domain.TeamMember[ idteamMember=" + idteamMember + " ]";
+        return "rs.fon.domain.TeamMember[ idteamMember=" + idteam + " ]";
     }
     
 }
