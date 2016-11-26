@@ -43,6 +43,13 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "UserPlayer.findByPushtoken", query = "SELECT u FROM UserPlayer u WHERE u.pushtoken = :pushtoken"),
     @NamedQuery(name = "UserPlayer.findByToken", query = "SELECT u FROM UserPlayer u WHERE u.token = :token")})
 public class UserPlayer implements Serializable {
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 255)
+    @Column(name = "email")
+    private String email;
+    @Size(max = 255)
+    @Column(name = "image")
+    private String image;
     @JoinTable(name = "team_member", joinColumns = {
         @JoinColumn(name = "iduser", referencedColumnName = "iduser_player")}, inverseJoinColumns = {
         @JoinColumn(name = "idteam", referencedColumnName = "idteam")})
@@ -201,6 +208,22 @@ public class UserPlayer implements Serializable {
 
     public void setUserAnswerList(List<UserAnswer> userAnswerList) {
         this.userAnswerList = userAnswerList;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
     
 }

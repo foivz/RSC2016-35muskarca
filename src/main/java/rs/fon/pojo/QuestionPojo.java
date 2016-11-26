@@ -80,7 +80,7 @@ public class QuestionPojo {
         this.type = type;
     }
 
-    public static List<QuestionPojo> toAnswerPojo(List<Question> quizs) {
+    public static List<QuestionPojo> toQPojo(List<Question> quizs) {
         List<QuestionPojo> pojos = new ArrayList<>();
         for (Question q : quizs) {
             pojos.add(new QuestionPojo(q));

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -44,6 +45,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Quiz.findByStartdate", query = "SELECT q FROM Quiz q WHERE q.startdate = :startdate"),
     @NamedQuery(name = "Quiz.findByEnddate", query = "SELECT q FROM Quiz q WHERE q.enddate = :enddate")})
 public class Quiz implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quiz")
+    private List<QuizQuestion> quizQuestionList;
     @OneToMany(mappedBy = "idquiz")
     private List<RegistrationQuizTeam> registrationQuizTeamList;
     private static final long serialVersionUID = 1L;
@@ -186,6 +189,16 @@ public class Quiz implements Serializable {
 
     public void setRegistrationQuizTeamList(List<RegistrationQuizTeam> registrationQuizTeamList) {
         this.registrationQuizTeamList = registrationQuizTeamList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<QuizQuestion> getQuizQuestionList() {
+        return quizQuestionList;
+    }
+
+    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
+        this.quizQuestionList = quizQuestionList;
     }
     
 }

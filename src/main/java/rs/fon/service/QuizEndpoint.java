@@ -13,10 +13,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import rs.fon.domain.Answer;
+import rs.fon.domain.Question;
 import rs.fon.domain.Quiz;
+import rs.fon.domain.QuizQuestion;
 import rs.fon.domain.UserAccount;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
@@ -77,6 +82,43 @@ public class QuizEndpoint {
         List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.id=:id AND q.enddate > :enddate", Quiz.class).setParameter("enddate", new Date()).setParameter("id", id).getResultList();
         List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
+        return Response.ok().entity(dr).build();
+    }
+
+    @GET
+    @Path("question")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQuestionForQuiz(@PathParam("quizid") Integer quizid, @QueryParam("questionid") Integer questionid, @QueryParam("answerid") Integer answerid) {
+        EntityManager em = EMF.createEntityManager();
+//        Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
+        if (questionid != null && answerid != null) {
+            QuizQuestion qq = new QuizQuestion();
+            qq.setQuiz(new Quiz(quizid));
+            qq.setQuestion(new Question(questionid));
+            qq.setAnswer(new Answer(answerid));
+            qq.setTaken(true);
+            manager.merge(em, qq);
+        }
+        if (questionid != null && answerid == null) {
+            //pass
+            QuizQuestion qq = new QuizQuestion();
+            qq.setAnswer(null);
+            qq.setTaken(false);
+            qq.setQuiz(new Quiz(quizid));
+            qq.setQuestion(new Question(questionid));
+            manager.merge(em, qq);
+        }
+        Quiz quiz = em.createQuery("SELECT q FROM Quiz q WHERE q.id=:id", Quiz.class).setParameter("id", quizid).getSingleResult();
+        for (QuizQuestion col : quiz.getQuizQuestionList()) {
+            if (!col.getTaken() && col.getAnswer() != null) {
+                col.setTaken(true);
+                manager.merge(em, col);
+
+                DarkoResponse dr = new DarkoResponse(true, col, null);
+                return Response.ok().entity(dr).build();
+            }
+        }
+        DarkoResponse dr = new DarkoResponse(true, false, null);
         return Response.ok().entity(dr).build();
     }
 

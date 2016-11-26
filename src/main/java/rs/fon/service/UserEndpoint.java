@@ -84,33 +84,35 @@ public class UserEndpoint {
         DarkoResponse dr = new DarkoResponse(true, ur, null);
         return Response.ok().entity(dr).build();
     }
+
     @POST
     @Path("/pushRegistration")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response pushRegistration(@HeaderParam("authorization") String token, UserPojo userPushToken) {
-    try {
-    EntityManager em = EMF.createEntityManager();
-    manager.checkUser(em, token);
-    UserAccount user = null;
-    try {
-        user = (UserAccount) em
-                .createQuery("SELECT u FROM UserAccount u WHERE u.token = :token")
-                .setParameter("token", tokenHelper.decode(token))
-                .getSingleResult();
-        user.setPushToken(userPushToken.getPushtoken());
-        manager.merge(em, user);
-    } catch (NoResultException e) {
-        return Response.ok().entity(new DarkoResponse(false, null, "Token ne valja")).build();
-    }
-    UserPojo ur = new UserPojo(user);
-    DarkoResponse dr = new DarkoResponse(true, ur, null);
-        return Response.ok().entity(dr).build();
-    }catch (Exception e){
-        return Response.ok().entity(new DarkoResponse(false, null, "Ne valja token.")).build();
-    }
+        try {
+            EntityManager em = EMF.createEntityManager();
+            manager.checkUser(em, token);
+            UserAccount user = null;
+            try {
+                user = (UserAccount) em
+                        .createQuery("SELECT u FROM UserAccount u WHERE u.token = :token")
+                        .setParameter("token", tokenHelper.decode(token))
+                        .getSingleResult();
+                user.setPushToken(userPushToken.getPushtoken());
+                manager.merge(em, user);
+            } catch (NoResultException e) {
+                return Response.ok().entity(new DarkoResponse(false, null, "Token ne valja")).build();
+            }
+            UserPojo ur = new UserPojo(user);
+            DarkoResponse dr = new DarkoResponse(true, ur, null);
+            return Response.ok().entity(dr).build();
+        } catch (Exception e) {
+            return Response.ok().entity(new DarkoResponse(false, null, "Ne valja token.")).build();
+        }
 
     }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -144,7 +146,7 @@ public class UserEndpoint {
             return Response.ok().entity(new DarkoResponse(false, null, "Registracija nije uspela.")).build();
         }
     }
-    
+
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)

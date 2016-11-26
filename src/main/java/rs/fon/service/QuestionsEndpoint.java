@@ -5,6 +5,7 @@
  */
 package rs.fon.service;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -54,12 +55,12 @@ public class QuestionsEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getQuestions(@HeaderParam("authorization") String token) {
-//        EntityManager em = EMF.createEntityManager();
-//        Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
-//        
-//        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.enddate > :enddate", Quiz.class).setParameter("enddate", new Date()).getResultList();
-//        List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
-        DarkoResponse dr = new DarkoResponse(true, null, null);
+        EntityManager em = EMF.createEntityManager();
+        Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
+        
+        List<Question> resultList = em.createQuery("SELECT q FROM Question q WHERE q.adminid=:id", Question.class).setParameter("id", id).getResultList();
+        List<QuestionPojo> toQuizPojo = QuestionPojo.toQPojo(resultList);
+        DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
         return Response.ok().entity(dr).build();
     }
 

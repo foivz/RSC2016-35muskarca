@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "team_member")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TeamMember.findAll", query = "SELECT t FROM TeamMember t"),
-    @NamedQuery(name = "TeamMember.findByIdteamMember", query = "SELECT t FROM TeamMember t WHERE t.idteamMember = :idteamMember")})
+    @NamedQuery(name = "TeamMember.findAll", query = "SELECT t FROM TeamMember t")})
 public class TeamMember implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @JoinColumn(name = "iduser", referencedColumnName = "iduser_player")
@@ -42,7 +42,6 @@ public class TeamMember implements Serializable {
 
     public TeamMember() {
     }
-
 
     public UserPlayer getIduser() {
         return iduser;
@@ -84,5 +83,5 @@ public class TeamMember implements Serializable {
     public String toString() {
         return "rs.fon.domain.TeamMember[ idteamMember=" + idteam + " ]";
     }
-    
+
 }
