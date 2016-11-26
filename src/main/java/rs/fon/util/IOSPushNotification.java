@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class IOSPushNotification {
 
-    public String pushNotification(String not, String cert, List<String> devices) {
+    public String pushNotification(String not, String cert, List<String> tokens) {
         ApnsService pushService = APNS.newService()
                 .withCert("/home/stefan/Desktop/NoviSertifikat.p12", "darko123")
                 .withSandboxDestination()
@@ -51,15 +51,15 @@ public class IOSPushNotification {
                 })
                 .build();
 
-        String token = "2d26ffb85bc07b4f067c2333fbe8e57b46ad859b19fdbd402411c17dd1735d4f";
-        System.out.println("*****" + not);
-        pushService.push(token, not);
+//        String token = "2d26ffb85bc07b4f067c2333fbe8e57b46ad859b19fdbd402411c17dd1735d4f";
+//        System.out.println("*****" + not);
+//        pushService.push(token, not);
 
-//        if (devices != null) {
-//            for (int i = 0; i < devices.size(); i++) {
-//                String token = devices.get(i);
-//                pushService.push(token, payload);
-//            }
+        if (tokens != null) {
+            for (int i = 0; i < tokens.size(); i++) {
+                pushService.push(tokens.get(i), not);
+            }
+        }
         return not;
 //        } else {
 //            throw new BadRequestException("Daj divajsove");

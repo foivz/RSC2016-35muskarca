@@ -16,14 +16,14 @@ public class UserPlayerLoginPojo {
     private String email;
     private String image;
     private String name;
-    private Integer socialnetid;
+    private String socialnetid;
     private String pushtoken;
     private String token;
 
     public UserPlayerLoginPojo() {
     }
 
-    public UserPlayerLoginPojo(String email, String image, String name, Integer socialnetid, String pushtoken, String token) {
+    public UserPlayerLoginPojo(String email, String image, String name, String socialnetid, String pushtoken, String token) {
         this.email = email;
         this.image = image;
         this.name = name;
@@ -67,11 +67,11 @@ public class UserPlayerLoginPojo {
         this.name = name;
     }
 
-    public Integer getSocialnetid() {
+    public String getSocialnetid() {
         return socialnetid;
     }
 
-    public void setSocialnetid(Integer socialnetid) {
+    public void setSocialnetid(String socialnetid) {
         this.socialnetid = socialnetid;
     }
 

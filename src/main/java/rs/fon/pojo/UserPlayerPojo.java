@@ -18,7 +18,7 @@ public class UserPlayerPojo {
     private Integer iduserPlayer;
     private String name;
     private String surname;
-    private Integer socialnetid;
+    private String socialnetid;
     private String rang;
     private Integer badge;
     private String pushtoken;
@@ -80,11 +80,11 @@ public class UserPlayerPojo {
         this.surname = surname;
     }
 
-    public Integer getSocialnetid() {
+    public String getSocialnetid() {
         return socialnetid;
     }
 
-    public void setSocialnetid(Integer socialnetid) {
+    public void setSocialnetid(String socialnetid) {
         this.socialnetid = socialnetid;
     }
 

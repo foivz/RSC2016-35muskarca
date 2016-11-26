@@ -5,6 +5,7 @@
  */
 package rs.fon.service;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -22,13 +23,17 @@ import rs.fon.domain.Answer;
 import rs.fon.domain.Question;
 import rs.fon.domain.Quiz;
 import rs.fon.domain.QuizQuestion;
+import rs.fon.domain.Team;
 import rs.fon.domain.UserAccount;
+import rs.fon.domain.UserPlayer;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
 import rs.fon.pojo.DarkoResponse;
+import rs.fon.pojo.QuestionAnswerPojo;
 import rs.fon.pojo.QuizPojo;
 import rs.fon.token.AbstractTokenCreator;
 import rs.fon.token.Base64Token;
+import rs.fon.util.IOSPushNotification;
 
 /**
  *
@@ -39,9 +44,23 @@ public class QuizEndpoint {
 
     AbstractTokenCreator tokenHelper;
     Manager manager = new Manager();
+    IOSPushNotification iOSPushNotification = new IOSPushNotification();
 
     public QuizEndpoint() {
         tokenHelper = new Base64Token();
+    }
+
+    @POST
+    @Path("{quizId}")
+    public Response startQuiz(@HeaderParam("authorization") String token, @PathParam("quizId") Integer quizId) {
+        EntityManager em = EMF.createEntityManager();
+        List<UserPlayer> resultList = em.createQuery("SELECT u FROM Quiz q INNER JOIN q.registrationQuizTeamList r LEFT JOIN r.idteam t LEFT JOIN t.userPlayerList u WHERE q.idquiz = :id", UserPlayer.class).setParameter("id", quizId).getResultList();
+        for (UserPlayer up : resultList) {
+            String s = "{\"iosNotification\":{\"aps\":{\"alert\":\"Quiz is starting now. \",\"badge\":1,\"sound\":\"default\"},\"pushType\":\"quizStarted\"}}";
+            iOSPushNotification.pushNotification(s, "", Arrays.asList(up.getPushtoken()));
+        }
+        DarkoResponse dr = new DarkoResponse(true, true, null);
+        return Response.ok().entity(dr).build();
     }
 
     @POST
@@ -67,7 +86,7 @@ public class QuizEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getQuiz() {
         EntityManager em = EMF.createEntityManager();
-        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.enddate > :enddate", Quiz.class).setParameter("enddate", new Date()).getResultList();
+        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.startdate > :startdate", Quiz.class).setParameter("startdate", new Date()).getResultList();
         List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
         return Response.ok().entity(dr).build();
@@ -79,39 +98,47 @@ public class QuizEndpoint {
     public Response getQuiz(@HeaderParam("authorization") String token) {
         EntityManager em = EMF.createEntityManager();
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
-        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.id=:id AND q.enddate < :enddate", Quiz.class).setParameter("enddate", new Date()).setParameter("id", id).getResultList();
+        List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.id.id=:id AND q.enddate < :enddate", Quiz.class).setParameter("enddate", new Date()).setParameter("id", id).getResultList();
         List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
         return Response.ok().entity(dr).build();
     }
 
-    @GET
+    @POST
     @Path("question")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getQuestionForQuiz(@PathParam("quizid") Integer quizid, @QueryParam("questionid") Integer questionid, @QueryParam("answerid") Integer answerid) {
+    public Response getQuestionForQuiz(@HeaderParam("authorization") String socid, QuestionAnswerPojo qa) {
         EntityManager em = EMF.createEntityManager();
 //        Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
-        if (questionid != null && answerid != null) {
+        UserPlayer singleResult = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", socid).getSingleResult();
+
+        //odgovorio
+        if (qa.getQuestionid() != null && qa.getAnswerid() != null) {
             QuizQuestion qq = new QuizQuestion();
-            qq.setQuiz(new Quiz(quizid));
-            qq.setQuestion(new Question(questionid));
-            qq.setAnswer(new Answer(answerid));
+            qq.setUserPlayer(singleResult);
+            qq.setTeam(new Team(qa.getTeamId()));
+            qq.setQuiz(new Quiz(qa.getQuizid()));
+            qq.setQuestion(new Question(qa.getQuestionid()));
+            qq.setAnswer(new Answer(qa.getAnswerid()));
             qq.setTaken(true);
             manager.merge(em, qq);
         }
-        if (questionid != null && answerid == null) {
-            //pass
+        //pass
+        if (qa.getQuestionid() != null && qa.getAnswerid() == null) {
             QuizQuestion qq = new QuizQuestion();
+            qq.setUserPlayer(null);
             qq.setAnswer(null);
             qq.setTaken(false);
-            qq.setQuiz(new Quiz(quizid));
-            qq.setQuestion(new Question(questionid));
+//            qq.setQuiz(new Quiz(qa.getQuizid()));
+//            qq.setQuestion(new Question(qa.getQuestionid()));
             manager.merge(em, qq);
         }
-        Quiz quiz = em.createQuery("SELECT q FROM Quiz q WHERE q.id=:id", Quiz.class).setParameter("id", quizid).getSingleResult();
+        //novo pitanje
+        Quiz quiz = em.createQuery("SELECT q FROM Quiz q WHERE q.id.id=:id", Quiz.class).setParameter("id", qa.getQuizid()).getSingleResult();
         for (QuizQuestion col : quiz.getQuizQuestionList()) {
             if (!col.getTaken() && col.getAnswer() != null) {
                 col.setTaken(true);
+                col.setUserPlayer(singleResult);
                 manager.merge(em, col);
 
                 DarkoResponse dr = new DarkoResponse(true, col, null);

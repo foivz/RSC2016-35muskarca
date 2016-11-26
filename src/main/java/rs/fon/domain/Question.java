@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -38,6 +40,11 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Question.findByQuestion", query = "SELECT q FROM Question q WHERE q.question = :question"),
     @NamedQuery(name = "Question.findByType", query = "SELECT q FROM Question q WHERE q.type = :type")})
 public class Question implements Serializable {
+    @JoinTable(name = "mladenquiz", joinColumns = {
+        @JoinColumn(name = "idquestion1", referencedColumnName = "idquestion")}, inverseJoinColumns = {
+        @JoinColumn(name = "idquiz1", referencedColumnName = "idquiz")})
+    @ManyToMany
+    private List<Quiz> quizList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
     private List<QuizQuestion> quizQuestionList;
     private static final long serialVersionUID = 1L;
@@ -161,6 +168,16 @@ public class Question implements Serializable {
 
     public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
         this.quizQuestionList = quizQuestionList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Quiz> getQuizList() {
+        return quizList;
+    }
+
+    public void setQuizList(List<Quiz> quizList) {
+        this.quizList = quizList;
     }
     
 }

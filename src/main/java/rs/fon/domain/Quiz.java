@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -45,6 +46,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Quiz.findByStartdate", query = "SELECT q FROM Quiz q WHERE q.startdate = :startdate"),
     @NamedQuery(name = "Quiz.findByEnddate", query = "SELECT q FROM Quiz q WHERE q.enddate = :enddate")})
 public class Quiz implements Serializable {
+    @ManyToMany(mappedBy = "quizList")
+    private List<Question> questionList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quiz")
     private List<QuizQuestion> quizQuestionList;
     @OneToMany(mappedBy = "idquiz")
@@ -199,6 +202,16 @@ public class Quiz implements Serializable {
 
     public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
         this.quizQuestionList = quizQuestionList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Question> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(List<Question> questionList) {
+        this.questionList = questionList;
     }
     
 }

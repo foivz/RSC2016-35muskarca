@@ -32,6 +32,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "QuizQuestion.findByTaken", query = "SELECT q FROM QuizQuestion q WHERE q.taken = :taken"),
     @NamedQuery(name = "QuizQuestion.findByCorrect", query = "SELECT q FROM QuizQuestion q WHERE q.correct = :correct")})
 public class QuizQuestion implements Serializable {
+    @JoinColumn(name = "user_id", referencedColumnName = "iduser_player", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private UserPlayer userPlayer;
+    @JoinColumn(name = "team_id", referencedColumnName = "idteam", insertable = false, updatable = false)
+    @ManyToOne(optional = false)
+    private Team team;
     @JoinColumn(name = "answer", referencedColumnName = "idanswer")
     @ManyToOne
     private Answer answer;
@@ -141,6 +147,22 @@ public class QuizQuestion implements Serializable {
 
     public void setAnswer(Answer answer) {
         this.answer = answer;
+    }
+
+    public UserPlayer getUserPlayer() {
+        return userPlayer;
+    }
+
+    public void setUserPlayer(UserPlayer userPlayer) {
+        this.userPlayer = userPlayer;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
     }
     
 }

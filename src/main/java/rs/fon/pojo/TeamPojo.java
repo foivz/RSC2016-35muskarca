@@ -1,27 +1,29 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package rs.fon.pojo;
 
-import rs.fon.domain.RegistrationQuizTeam;
-import rs.fon.domain.TeamMember;
-
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
+import rs.fon.domain.Team;
 
 /**
- * Created by marij on 11/26/2016.
+ *
+ * @author stefan
  */
 public class TeamPojo {
+
     private Integer idteam;
     private String teamname;
-    private List<RegistrationQuizTeam> registrationQuizTeamList;
-    private List<TeamMember> teamMemberList;
 
     public TeamPojo() {
     }
 
-    public TeamPojo(Integer idteam) {
-        this.idteam = idteam;
+    public TeamPojo(Team team) {
+        this.idteam = team.getIdteam();
+        this.teamname = team.getTeamname();
     }
 
     public Integer getIdteam() {
@@ -39,4 +41,13 @@ public class TeamPojo {
     public void setTeamname(String teamname) {
         this.teamname = teamname;
     }
+
+    public static List<TeamPojo> toPojo(List<Team> quizs) {
+        List<TeamPojo> pojos = new ArrayList<>();
+        for (Team q : quizs) {
+            pojos.add(new TeamPojo(q));
+        }
+        return pojos;
+    }
+
 }

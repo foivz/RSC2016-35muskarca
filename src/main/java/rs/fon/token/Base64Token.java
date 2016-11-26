@@ -29,7 +29,7 @@ public class Base64Token extends AbstractTokenCreator {
 
     @Override
     public String decode(String token) {
-        return new String(Base64.getDecoder().decode(token));
+        return new String(Base64.getDecoder().decode(token.replaceFirst("Basic ", "")));
     }
 
 }

@@ -1,46 +1,83 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package rs.fon.service;
 
+import java.util.Arrays;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 import rs.fon.domain.Quiz;
-import rs.fon.domain.UserAccount;
+import rs.fon.domain.RegistrationQuizTeam;
+import rs.fon.domain.Team;
+import rs.fon.domain.TeamMember;
+import rs.fon.domain.UserPlayer;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
 import rs.fon.pojo.DarkoResponse;
-import rs.fon.pojo.QuizPojo;
+import rs.fon.pojo.TeamPojo;
 import rs.fon.token.AbstractTokenCreator;
 import rs.fon.token.Base64Token;
-
-import javax.persistence.EntityManager;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import rs.fon.util.IOSPushNotification;
 
 /**
- * Created by marij on 11/26/2016.
+ *
+ * @author stefan
  */
-@Path("/team")
+@Path("teams")
 public class TeamEndpoint {
+
     AbstractTokenCreator tokenHelper;
     Manager manager = new Manager();
+    IOSPushNotification iOSPushNotification = new IOSPushNotification();
 
     public TeamEndpoint() {
-        this.tokenHelper = new Base64Token();
+        tokenHelper = new Base64Token();
+    }
+
+    @GET
+    @Path("{teamId}/quiz/{quizId}")
+    public Response registerTeamForQuiz(@PathParam("teamId") Integer teamId, @PathParam("quizId") Integer quizId) {
+        EntityManager em = EMF.createEntityManager();
+        RegistrationQuizTeam r = new RegistrationQuizTeam();
+        r.setIdteam(new Team(teamId));
+        r.setIdquiz(new Quiz(quizId));
+        manager.persist(em, r);
+        DarkoResponse dr = new DarkoResponse(true, true, null);
+        em.close();
+        return Response.ok().entity(dr).build();
+    }
+    
+    @GET
+    @Path("")
+    public Response getTeams(@HeaderParam("authorization") String socid) {
+        EntityManager em = EMF.createEntityManager();
+        List<Team> resultList = em.createQuery("SELECT tm.idteam from TeamMember tm WHERE tm.iduser.socialnetid=:sid", Team.class).setParameter("sid", socid).getResultList();
+        List<TeamPojo> toPojo = TeamPojo.toPojo(resultList);
+        DarkoResponse dr = new DarkoResponse(true, toPojo, null);
+        em.close();
+        return Response.ok().entity(dr).build();
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createTeam(@HeaderParam("authorization") String token, QuizPojo pojo) {
+    public Response createTeam(@HeaderParam("authorization") String socid, @PathParam("name") String name) {
         EntityManager em = EMF.createEntityManager();
-
-        Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
-        Quiz q = QuizPojo.createQuiz(pojo);
-        q.setId(new UserAccount(id));
-        manager.persist(em, q);
-
-        pojo.setId(id);
-        pojo.setIdquiz(q.getId().getId());
-
-        DarkoResponse dr = new DarkoResponse(true, pojo, null);
+        Team t = new Team();
+        t.setTeamname(name);
+        TeamMember teamMember = new TeamMember();
+        teamMember.setIdteam(t);
+        teamMember.setIduser(em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", socid).getSingleResult());
+        t.setTeamMemberList(Arrays.asList(teamMember));
+        manager.persist(em, t);
+        DarkoResponse dr = new DarkoResponse(true, true, null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 }

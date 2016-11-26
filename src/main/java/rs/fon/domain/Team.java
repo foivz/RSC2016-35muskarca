@@ -8,6 +8,7 @@ package rs.fon.domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +36,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Team.findByIdteam", query = "SELECT t FROM Team t WHERE t.idteam = :idteam"),
     @NamedQuery(name = "Team.findByTeamname", query = "SELECT t FROM Team t WHERE t.teamname = :teamname")})
 public class Team implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
+    private List<QuizQuestion> quizQuestionList;
     @ManyToMany(mappedBy = "teamList")
     private List<UserPlayer> userPlayerList;
     private static final long serialVersionUID = 1L;
@@ -126,6 +129,16 @@ public class Team implements Serializable {
 
     public void setUserPlayerList(List<UserPlayer> userPlayerList) {
         this.userPlayerList = userPlayerList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<QuizQuestion> getQuizQuestionList() {
+        return quizQuestionList;
+    }
+
+    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
+        this.quizQuestionList = quizQuestionList;
     }
     
 }

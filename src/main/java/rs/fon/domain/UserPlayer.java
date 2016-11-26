@@ -8,6 +8,7 @@ package rs.fon.domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,6 +44,11 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "UserPlayer.findByPushtoken", query = "SELECT u FROM UserPlayer u WHERE u.pushtoken = :pushtoken"),
     @NamedQuery(name = "UserPlayer.findByToken", query = "SELECT u FROM UserPlayer u WHERE u.token = :token")})
 public class UserPlayer implements Serializable {
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userPlayer")
+    private List<QuizQuestion> quizQuestionList;
+    @Size(max = 255)
+    @Column(name = "socialnetid")
+    private String socialnetid;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 255)
     @Column(name = "email")
@@ -68,8 +74,6 @@ public class UserPlayer implements Serializable {
     @Size(max = 255)
     @Column(name = "surname")
     private String surname;
-    @Column(name = "socialnetid")
-    private Integer socialnetid;
     @Size(max = 255)
     @Column(name = "rang")
     private String rang;
@@ -115,13 +119,6 @@ public class UserPlayer implements Serializable {
         this.surname = surname;
     }
 
-    public Integer getSocialnetid() {
-        return socialnetid;
-    }
-
-    public void setSocialnetid(Integer socialnetid) {
-        this.socialnetid = socialnetid;
-    }
 
     public String getRang() {
         return rang;
@@ -224,6 +221,24 @@ public class UserPlayer implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getSocialnetid() {
+        return socialnetid;
+    }
+
+    public void setSocialnetid(String socialnetid) {
+        this.socialnetid = socialnetid;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<QuizQuestion> getQuizQuestionList() {
+        return quizQuestionList;
+    }
+
+    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
+        this.quizQuestionList = quizQuestionList;
     }
     
 }

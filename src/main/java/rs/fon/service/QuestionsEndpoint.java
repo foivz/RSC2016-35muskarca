@@ -57,9 +57,11 @@ public class QuestionsEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getQuestions(@HeaderParam("authorization") String token) {
         EntityManager em = EMF.createEntityManager();
+        System.out.println("**************");
+        System.out.println(token);
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
         
-        List<Question> resultList = em.createQuery("SELECT q FROM Question q WHERE q.adminid=:id", Question.class).setParameter("id", id).getResultList();
+        List<Question> resultList = em.createQuery("SELECT q FROM Question q WHERE q.adminid.id=:id", Question.class).setParameter("id", id).getResultList();
         List<QuestionPojo> toQuizPojo = QuestionPojo.toQPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
         return Response.ok().entity(dr).build();
