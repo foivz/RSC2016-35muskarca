@@ -4,6 +4,9 @@
  * and open the template in the editor.
  */
 package rs.fon.emf;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -20,10 +23,14 @@ public class EMF implements ServletContextListener{
 
     private static EntityManagerFactory emf;
     
+//    private ScheduledExecutorService sched;
+    
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         System.out.println("PWD: " + System.getProperty("user.dir"));
         emf = Persistence.createEntityManagerFactory("rs.fon_RC3_war_1.0-SNAPSHOTPU");
+//        sched = Executors.newSingleThreadScheduledExecutor();
+//        sched.scheduleAtFixedRate(new MyTask(), 0, 5, TimeUnit.MINUTES);
         System.out.println("################## " + emf);
     }
 
