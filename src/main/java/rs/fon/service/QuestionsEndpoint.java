@@ -54,6 +54,7 @@ public class QuestionsEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response getQuestions(@HeaderParam("authorization") String token) {
         EntityManager em = EMF.createEntityManager();
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
