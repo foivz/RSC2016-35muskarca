@@ -85,6 +85,12 @@ public class QuizEndpoint {
 
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
         Quiz q = QuizPojo.createQuiz(pojo);
+        List<Question> q123 = new ArrayList<>();
+        for (Integer question : pojo.getQuestions()) {
+            q123.add(new Question(question));
+        }
+        
+        q.setQuestionList(q123);
         q.setId(new UserAccount(id));
         manager.persist(em, q);
 

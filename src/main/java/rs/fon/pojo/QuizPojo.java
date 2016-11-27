@@ -25,6 +25,7 @@ public class QuizPojo {
     private Date enddate;
     private Integer idquiz;
     private Integer id;
+    private List<Integer> questions = new ArrayList<>();
 
     public QuizPojo() {
     }
@@ -144,6 +145,14 @@ public class QuizPojo {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<Integer> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Integer> questions) {
+        this.questions = questions;
     }
     
     
