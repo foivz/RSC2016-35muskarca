@@ -65,7 +65,10 @@ public class UserPlayerEndpoint {
             EntityManager em = EMF.createEntityManager();
             UserPlayer singleResult = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", loginPojo.getSocialnetid()).getSingleResult();
             singleResult.setPushtoken(loginPojo.getPushtoken());
+            System.out.println("**************");
+            System.out.println(loginPojo.getPushtoken());
             manager.merge(em, singleResult);
+            System.out.println(singleResult.getPushtoken());
         } catch (NoResultException e) {
             return Response.ok().entity(new DarkoResponse(false, null, "Korisnik ne postoji.")).build();
         }

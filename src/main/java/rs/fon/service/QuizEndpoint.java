@@ -58,12 +58,13 @@ public class QuizEndpoint {
     public Response startQuiz(@HeaderParam("authorization") String token, @PathParam("quizId") Integer quizId) {
         EntityManager em = EMF.createEntityManager();
 //        List<UserPlayer> resultList = em.createQuery("SELECT u FROM Quiz q INNER JOIN q.registrationQuizTeamList r LEFT JOIN r.idteam t LEFT JOIN t.userPlayerList u WHERE q.idquiz = :id", UserPlayer.class).setParameter("id", quizId).getResultList();
-        List<RegistrationQuizTeam> resultList = em.createQuery("SELECT r FROM Quiz q INNER JOIN q.registrationQuizTeamList r WHERE q.idquiz = :id", RegistrationQuizTeam.class).setParameter("id", quizId).getResultList();
+        List<RegistrationQuizTeam> resultList = em.createQuery("SELECT r FROM Quiz q LEFT JOIN q.registrationQuizTeamList r WHERE q.idquiz = :id", RegistrationQuizTeam.class).setParameter("id", quizId).getResultList();
         for (RegistrationQuizTeam rq : resultList) {
             for (UserPlayer up : rq.getIdteam().getUserPlayerList()) {
                 String s = "{\"iosNotification\":{\"aps\":{\"alert\":\"Quiz is starting now. \",\"badge\":1,\"sound\":\"default\"},\"pushType\":\"quizStarted\",\"registrationId\":" + rq.getIdregistration() + "}}";
                 iOSPushNotification.pushNotification(s, "", Arrays.asList(up.getPushtoken()));
-
+                System.out.println("################");
+                System.out.println(up.getPushtoken());
             }
         }
         DarkoResponse dr = new DarkoResponse(true, true, null);
