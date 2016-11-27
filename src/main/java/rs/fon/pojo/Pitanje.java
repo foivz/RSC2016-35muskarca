@@ -49,6 +49,11 @@ public class Pitanje {
 
     public Pitanje() {
     }
+
+    @Override
+    public String toString() {
+        return "Pitanje{" + "question=" + question + ", registrationId=" + registrationId + ", teamId=" + teamId + '}';
+    }
     
     
 }

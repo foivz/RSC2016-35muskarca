@@ -54,4 +54,9 @@ public class QuestionAnswerPojo {
         this.questionId = questionId;
     }
 
+    @Override
+    public String toString() {
+        return "QuestionAnswerPojo{" + "registrationId=" + registrationId + ", questionId=" + questionId + ", answered=" + answered + ", correct=" + correct + '}';
+    }
+
 }
