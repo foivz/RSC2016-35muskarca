@@ -5,7 +5,8 @@
  */
 package rs.fon.token;
 
-import java.util.Base64;
+
+import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -24,12 +25,12 @@ public class Base64Token extends AbstractTokenCreator {
 
     @Override
     public String encode(String token) {
-            return Base64.getEncoder().encodeToString(token.getBytes());
+            return Base64.encodeBase64String(token.getBytes());
     }
 
     @Override
     public String decode(String token) {
-        return new String(Base64.getDecoder().decode(token.replaceFirst("Basic ", "")));
+        return new String(Base64.decodeBase64(token.replaceFirst("Basic ", "")));
     }
 
 }

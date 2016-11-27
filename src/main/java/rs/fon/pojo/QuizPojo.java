@@ -118,7 +118,6 @@ public class QuizPojo {
         q.setRang(pojo.getRang());
         q.setStartdate(pojo.getStartdate());
         q.setEnddate(pojo.getEnddate());
-        q.setMaxparticipants(pojo.getMaxparticipants());
         q.setIdquiz(null);
         return q;
     }

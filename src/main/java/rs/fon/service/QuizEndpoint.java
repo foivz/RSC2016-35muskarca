@@ -5,6 +5,7 @@
  */
 package rs.fon.service;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -21,14 +22,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import rs.fon.domain.Answer;
-import rs.fon.domain.Question;
-import rs.fon.domain.Quiz;
-import rs.fon.domain.QuizQuestion;
-import rs.fon.domain.RegistrationQuizTeam;
-import rs.fon.domain.Team;
-import rs.fon.domain.UserAccount;
-import rs.fon.domain.UserPlayer;
+
+import rs.fon.domain.*;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
 import rs.fon.pojo.DarkoResponse;
@@ -85,11 +80,25 @@ public class QuizEndpoint {
 
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
         Quiz q = QuizPojo.createQuiz(pojo);
+        manager.persist(em, q);
         List<Question> q123 = new ArrayList<>();
         for (Integer question : pojo.getQuestions()) {
-            q123.add(new Question(question));
+            Question question1 = new Question(question);
+            q123.add(question1);
         }
-        
+
+        String query = "INSERT INTO mladenquiz ( idquiz1, idquestion1) values (";
+        for(Question ques: q123){
+            query += q.getIdquiz() + "," + ques.getIdquestion()+"),(";
+//            MladenQuiz mq= new MladenQuiz(ques.getIdquestion(), pojo.getIdquiz());
+//            manager.persist(em, mq);
+        }
+        query = query.substring(0, query.length()-2);
+        System.out.println("####################"+query);
+        em.getTransaction().begin();
+        em.createNativeQuery(query).executeUpdate();
+        em.getTransaction().commit();
+
         q.setQuestionList(q123);
         q.setId(new UserAccount(id));
         manager.persist(em, q);
