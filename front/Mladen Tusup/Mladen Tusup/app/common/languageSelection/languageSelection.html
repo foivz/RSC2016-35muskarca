@@ -1,0 +1,7 @@
+<h1>Select your language</h1>
+<ul>
+	<li ng-repeat="option in languageSelection.options">
+		<a class="btn btn-s" ui-sref="{{option.stateName}}({{option.stateParams}})">{{option.text | uppercase}}</a>
+	</li>
+
+</ul>

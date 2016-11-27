@@ -95,7 +95,7 @@ public class TeamEndpoint {
         manager.persist(em, t);
         singleResult.setTeamList(Arrays.asList(t));
         manager.persist(em, singleResult);
-        DarkoResponse dr = new DarkoResponse(true, null, null);
+        DarkoResponse dr = new DarkoResponse(true, t.getIdteam() + "af124a", null);
         em.close();
         return Response.ok().entity(dr).build();
     }

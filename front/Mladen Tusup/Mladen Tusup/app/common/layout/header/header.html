@@ -1,0 +1,20 @@
+<div ng-controller="homeController" class="header">
+    <div class="container">    
+      <div class="col-xs-3 col-md-3 col-lg-3">
+        <img style="border-radius:5px;" class="square" ui-sref="iQuiz.common.home" ng-src="assets/img/FinalPngBorder.png" alt="Home" />
+      </div>
+
+      <div class="col-xs-9 col-md-9 col-lg-9">
+        <ul>
+            <li style="color:white" ui-sref="iQuiz.common.userAccount" ng-show="isLoggedIn">Welcome {{fullname}}</li>
+<!--
+            <li ui-sref="iQuiz.common.aboutUs">About us</li>
+            <li ui-sref="iQuiz.common.news">News</li>
+            <li ui-sref="iQuiz.common.portfolio">Portfolio</li>
+-->
+            
+            <li ng-show="!isLoggedIn">Dedicated to making your business bloom</li>
+        </ul>
+      </div>
+    </div>
+</div>

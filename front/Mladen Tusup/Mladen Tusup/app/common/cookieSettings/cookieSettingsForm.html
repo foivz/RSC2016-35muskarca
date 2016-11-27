@@ -1,0 +1,54 @@
+<div class="checkbox">
+  <input id="allCookies" type="checkbox" ng-model="cookies.areAllCookiesAllowed" ng-change="cookies.areFunctionalCookiesAllowed = (cookies.areThirdPartyCookiesAllowed = cookies.areAllCookiesAllowed)" />
+  <label for="allCookies">
+    <span>{{ 'mmcore.cookieSettings.useAllCookies' | translate }}</span>
+  </label>
+</div>
+<p>{{ 'mmcore.cookieSettings.useAllCookiesInfo' | translate }}</p>
+
+<dl>
+  <dt>
+    <div class="checkbox">
+      <input id="mandatoryCookies" type="checkbox" disabled checked>
+      <label for="mandatoryCookies">
+        <span>{{ 'mmcore.cookieSettings.mandatoryCookies' | translate }}</span>
+      </label>
+    </div>
+  </dt>
+  <dd class="chunk_divide">
+    {{ 'mmcore.cookieSettings.mandatoryCookiesInfo' | translate }}
+  </dd>
+
+  <dt>
+    <div class="checkbox">
+      <input id="functionalCookies" type="checkbox" ng-model="cookies.areFunctionalCookiesAllowed" ng-change="cookies.areAllCookiesAllowed = cookies.areFunctionalCookiesAllowed && cookies.areThirdPartyCookiesAllowed">
+      <label for="functionalCookies">
+        <span>{{ 'mmcore.cookieSettings.functionalCookies' | translate }}</span>
+      </label>
+    </div>
+  </dt>
+  <dd>
+    {{ 'mmcore.cookieSettings.functionalCookiesInfo' | translate }}
+  </dd>
+
+  <dt>
+    <div class="checkbox">
+      <input id="thirdPartyCookies" type="checkbox" ng-model="cookies.areThirdPartyCookiesAllowed" ng-change="cookies.areAllCookiesAllowed = cookies.areFunctionalCookiesAllowed && cookies.areThirdPartyCookiesAllowed">
+      <label for="thirdPartyCookies">
+        <span>{{ 'mmcore.cookieSettings.thirdPartyCookies' | translate }}</span>
+      </label>
+    </div>
+  </dt>
+  <dd>
+    {{ 'mmcore.cookieSettings.thirdPartyCookiesInfo' | translate }}
+  </dd>
+</dl>
+
+  <div class="buttons">
+    <button type="button" class="btn btn-primary" ng-click="cancel();">
+      {{ 'mmcore.cookieSettings.cancel' | translate }}
+    </button>
+    <button type="submit" class="btn btn-secondary">
+      {{ 'mmcore.cookieSettings.save' | translate }}
+    </button>
+  </div>

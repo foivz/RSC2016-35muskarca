@@ -1,0 +1,24 @@
+<h1>Create your questions here</h1>
+<select ng-model="quiz.typeOfQuestion" style="color:black" ng-change="changeSelection(quiz.typeOfQuestion)" data-ng-options="typeOfQuestion.id as typeOfQuestion.name for typeOfQuestion in typeOfQuestions" ng-if="shouldCreateNewQuestion">
+                       <option value="">Select</option>
+                   </select>
+                        <div ng-if="input">
+                           <fieldset  data-ng-repeat="choice in choices">
+              
+              <input type="text" ng-model="choice.name" name="" placeholder="Your question here:">
+              <button type="button" class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+           </fieldset>
+                         <button type="button" class="addfields" ng-click="addNewChoice()">Add question</button>
+                            </div>
+                         
+                         <div ng-if="multiple">
+                             <input type="text" name="" placeholder="Your question here:"></br>
+                           <fieldset  data-ng-repeat="multipleChoice in multipleChoises">
+              
+            
+            <input style="display:inline;" type="checkbox" name="$index" value=""><br>
+                               <input type="text" ng-model="multipleChoice.name" name="" placeholder="Your value here:"></br>-->
+              <button type="button" class="remove" ng-show="$last" ng-click="removeMultipleChoice()">-</button>
+           </fieldset>
+                         <button type="button" class="addfields" ng-click="addNewMultipleChoice()">Add checkbox</button>
+                            </div>0

@@ -1,0 +1,65 @@
+<div class="grid grid-2 grid-gap grid-2-ratio-3-1 grid-vertical-align-middle not-responsive">
+    <h1 class="grid-item">{{'common.menuRight.my-profile.message-log' | translate}}</h1>
+    <div class="grid-item dark-theme text-right">
+        <span class="underline">Filter</span>
+        <i class="fa fa-plus-circle fa-2x color-blue pointer vertical-align" aria-hidden="true" ng-show="!showMessagesFilter" ng-click="showHideFilter()"></i>
+        <i class="fa fa-minus-circle fa-2x color-blue pointer vertical-align" aria-hidden="true" ng-show="showMessagesFilter" ng-click="showHideFilter()"></i>
+    </div>
+</div>
+<section id="messages-details" class="tab-container">
+    <lnb-messages-filter ng-show="showMessagesFilter"></lnb-messages-filter>
+
+		<div class="light-theme">
+			
+			<nav>
+					<ul>
+							<li><a href="" ui-sref="app.pws.messages({type: 'unread'})" ui-sref-active="active" ui-sref-opts="{location: 'replace'}">{{'mmcore.messages.deliveryStatus.NOT_DELIVERED' | translate}}</a></li>
+							<li><a href="" ui-sref="app.pws.messages({type: 'all'})" ui-sref-active="active" ui-sref-opts="{location: 'replace'}">{{'mmcore.messages.deliveryStatus.ALL' | translate}}</a></li>
+					</ul>
+			</nav>
+			<div id="tabbed-content-container" class="messagesList-container">
+					<div class="grid grid-2 grid-2-ratio-3-1 messagesList-heading not-responsive">
+							<span class="grid-item">{{'mmcore.messages.message.subject' | translate}}</span>
+							<span class="grid-item">{{'mmcore.messages.message.date' | translate}}</span>
+					</div>
+					<dl class="messagesList" ng-if="messagesService.messages">
+							<dt class="grid grid-2 grid-2-ratio-3-1 grid-gap grid-gap-larger grid-vertical-align-middle messagesList-item not-responsive"
+									ng-click="messagesService.showMessageDetails(message.Id); messagesService.markAsRead(message);"
+									ng-repeat-start="message in messagesService.messages">
+									<h3 class="grid-item grid">
+										<i class="fa fa-angle-right grid-item" aria-hidden="true" ng-show="!messagesService.messageIDs['messageDetail'+message.Id]"></i>
+      <i class="fa fa-angle-down grid-item" aria-hidden="true" ng-show="messagesService.messageIDs['messageDetail'+message.Id]"></i>
+											<!--<i class="fa fa-angle-up fa-lg grid-item" aria-hidden="true"></i>-->
+											<span class="text grid-item">{{message.Subject}}</span>
+									</h3>
+									<span class="grid-item date-created" ng-if="message.DateCreated">
+										{{message.DateCreated | toDate | date:'dd/MM/yyyy'}}
+										<i class="fa fa-circle color-green block-right" aria-hidden="true" ng-if="message.Status === 'NOT_DELIVERED'"></i>
+									</span>
+									<span class="grid-item" ng-if="!message.DateCreated">
+										-
+										<i class="fa fa-circle color-green block-right" aria-hidden="true" ng-if="message.Status === 'NOT_DELIVERED'"></i>
+									</span>
+							</dt>
+							<dd class="messagesListItem-detail"
+									ng-show="messagesService.messageIDs['messageDetail'+message.Id]"
+									ng-repeat-end
+									ng-bind-html="message.Content">
+
+							</dd>
+					</dl>
+					<div class="grid grid-1 color-green spiner" ng-show="operationProgress.fetchMessages">
+							<i class="fa fa-spinner fa-spin fa-2x"></i>
+					</div>
+					<h2 class="noMessages" ng-if="messagesService.messages < 1 && !operationProgress.fetchMessages">
+							{{'common.app.pws.messages.noMessages' | translate}}
+					</h2>
+					<h2 class="noMessages" ng-if="messagesService.messages.length > 0 && !messagesService.hasMoreMessages && !operationProgress.fetchMessages">
+						{{'common.app.pws.messages.noMoreMessages' | translate}}
+					</h2>
+					<lnb-load-more  lnb-load-more-handler="messagesService.fetchNextPage" ng-if="messagesService.hasMoreMessages && !operationProgress.fetchMessages">
+					</lnb-load-more>
+			</div>
+		</div>
+		
+</section>

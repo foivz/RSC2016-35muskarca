@@ -1,0 +1,37 @@
+.footer{
+    font-family: 'Raleway', sans-serif;
+	height: 90px!important;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+}
+.footer li {
+    float: right;
+    display: inline-block;
+    text-decoration: none;
+    padding-left: 40px;
+    padding-top: 25px;
+}
+.footer h1 {
+    padding-top: 10px;	
+}
+.footer input {
+    height: 30px;
+    margin-top: -5px;
+    background-color: rgba(0, 0, 0, 0);
+    border-color: lightgrey;
+    text-align: center;
+    color: lightgrey;
+    border: 1px solid;
+    font-size: 14px;
+}
+.footer input:hover{
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.footer img {
+    height: 50px;
+    width: 50px;        
+}
+#reserved{
+	float: left;
+	margin-top: 40px;
+}

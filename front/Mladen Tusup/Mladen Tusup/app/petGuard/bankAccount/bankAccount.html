@@ -1,0 +1,114 @@
+<div ng-show="ready">
+  <h1>
+    <span ng-if="!currentBankAccount">{{'mmcore.bankAccount.registerBankAccount.title' | translate}}</span>
+    <span ng-if="currentBankAccount">{{'mmcore.bankAccount.changeBankAccount.title' | translate}}</span>
+    <!--<lnb-info-button action="infoService.show('bankaccount')"></lnb-info-button>-->
+  </h1>
+
+<div class="buttons">
+	<button type="button" ng-click="showInfoMessage===true ? showInfoMessage=false : showInfoMessage = true">{{'common.app.infoText' | translate}}</button>
+</div>
+  <div>
+    <div>
+      <div ng-show="showInfoMessage">
+        <p ng-show="currentBankAccount"
+           ng-bind-html="'mmcore.bankAccount.changeBankAccount.info-text' | translate"></p>
+        <p ng-show="!currentBankAccount"
+           ng-bind-html="'mmcore.bankAccount.registerBankAccount.info-text' | translate"></p>
+      </div>
+      <div>
+        <section ng-show="currentBankAccount">
+          <p ng-bind-html="'mmcore.bankAccount.changeBankAccount.text1' | translate">
+          </p>
+          <p>
+            <span ng-bind-html="'mmcore.bankAccount.changeBankAccount.text2' | translate"></span>
+            {{currentBankAccount | hideBankNumber}}
+          </p>
+        </section>
+        <section ng-show="!currentBankAccount">
+          <p ng-bind-html="'mmcore.bankAccount.registerBankAccount.text1' | translate"></p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <!--<div class="row">
+    <div class="success-message" ng-if="bankAccountForm.success && bankAccountForm.$pristine">
+      {{ 'mmcore.bankAccount.changeBankAccount.success' | translate }}
+    </div>
+    <div class="error-message" ng-if="bankAccountForm.error.reason && showErrorMessage">
+      {{ 'mmcore.bankAccount.changeBankAccount.error.' + bankAccountForm.error.reason | translate }}
+    </div>
+  </div>-->
+    <div id="collapseFour">
+        <div class="panel-body">
+            <div class="row">
+                    <div ng-show="addFunds" class="col-xs-12">
+                 <span>{{ 'mmcore.bankAccount.depositeMoney' | translate }}
+                    <div class="btn-group">
+                      <a ui-sref="app.pws.addFunds" href="#/EN/playerAccount/addFunds" class="btn btn-primary lnb-link">
+                        {{ 'mmcore.bankAccount.depositeMoney-label' | translate }}</a>
+                    </div>
+                  </span>
+                    </div>
+            </div>
+            <div id="old-account-number" class="row field-group info">
+							<input name="oldAccountNumber" id="oldAccountNumber" class="form-control" type="text"
+                     ui-mask="BE99 9999 9999 9999"  ui-mask-placeholder ui-mask-placeholder-char="X"
+                     ng-model="accountNumbers.oldAccountNumber"
+										 ng-show="currentBankAccount"
+										 ng-pattern="bankAccountPattern" lnb-scroll-to="scroll.oldAccountNumber"
+										 ng-blur="checkField(personalDetailsForm.oldAccountNumber)">
+										 <!-- placeholder="{{ 'mmcore.registration.bankAccount.placeholder' | translate }}" lnb-iban> -->
+							<label ng-show="currentBankAccount">
+								{{ 'mmcore.bankAccount.currentAccountNumber' | translate }}
+							</label>
+              <lnb-flyout
+                lnb-flyout-type="regular"
+                lnb-position-right="0"
+                lnb-position-bottom="calc(100% + 3px)"
+                lnb-container="old-account-number"
+                lnb-hover="true"
+                lnb-close-delay="0">
+
+                  <p class="fly-out">
+                     {{'pws.bankAccountRegistration-help' | translate}}
+                      <span class="fa fa-caret-down"></span>
+                  </p>
+              </lnb-flyout>
+							<div class="error-message"
+										 ng-if="showErrorMessage && invalidInputs.oldAccountNumber">
+									<span>{{'mmcore.bankAccount.oldAccountNumber.error-'+invalidInputs.oldAccountNumber| translate}}</span>
+							</div>
+            </div>
+            <div class="row field-group" ng-show="!addFunds">
+							<input name="newAccountNumber" id="newAccountNumber" class="form-control" type="text"
+                     ui-mask="BE99 9999 9999 9999"  ui-mask-placeholder ui-mask-placeholder-char="X"
+										 ng-model="accountNumbers.newAccountNumber"
+										 ng-pattern="bankAccountPattern" lnb-scroll-to="scroll.newAccountNumber"
+										 ng-disabled="disabled"
+										 ng-required="newAccountNumberRequired"
+										 ng-blur="checkField(personalDetailsForm.newAccountNumber)">
+										 <!-- placeholder="{{ 'mmcore.registration.bankAccount.placeholder' | translate }}" lnb-iban> -->
+							<label>
+								{{ 'mmcore.bankAccount.newAccountNumber' | translate }}
+							</label>
+							<div class="error-message"
+									 ng-if="showErrorMessage && invalidInputs.newAccountNumber">
+								<span>{{'mmcore.bankAccount.newAccountNumber.error-'+invalidInputs.newAccountNumber| translate}}</span>
+							</div>
+            </div>
+                  <!--<div class="row" ng-show="!addFunds">
+                    <div class="btn-group">
+                      <div>
+                        <button type="reset" class="btn btn-primary justified">
+                          {{'mmcore.common.cancel' | translate}}
+                        </button>
+                         <button type="button" ng-click="updateBankAccount(bankAccountForm)" class="btn btn-secondary justified">
+                         {{'mmcore.common.save' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                  </div>-->
+             </div>
+         </div>
+  </div>

@@ -147,6 +147,7 @@ public class QuizEndpoint {
             UserPlayer up = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", sid).getSingleResult();
             RegistrationQuizTeam singleResult = em.createQuery("SELECT r from RegistrationQuizTeam r where r.pin=:pin", RegistrationQuizTeam.class).setParameter("pin", pin).getSingleResult();
             up.getTeamList().add(singleResult.getIdteam());
+            manager.persist(em, up);
             DarkoResponse dr = new DarkoResponse(true, null, null);
             em.close();
             return Response.ok().entity(dr).build();

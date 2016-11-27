@@ -1,0 +1,81 @@
+*
+{
+  box-sizing: border-box;
+}
+
+.Modal-box
+{
+  width: 100%;
+  background: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.3);
+}
+.angular-google-map-container { 
+  height: 500px;
+}
+.badgeIcon {
+    height: 150px;
+    width: 150px;
+}
+.diabled-class button:hover{
+    background-color: darkgray;
+}
+/*
+.opacity img{
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+}
+*/
+
+@media screen and (min-width: 992px)
+{
+  .Modal-box
+  {
+    width: 50%;
+    padding: 30px;
+  }
+}
+.homeImage 
+{
+    max-height: 100%;
+    max-width: 100px;
+}
+.square {
+    height: 250px;
+    width: 100%;
+}
+fieldset{
+    background: #FCFCFC;
+    padding: 16px;
+    border: 1px solid #D5D5D5;
+}
+.addfields{
+    margin: 10px 0;
+}
+
+#choicesDisplay {
+    padding: 10px;
+    background: #505050;
+    border: 1px solid rgb(171, 239, 171);
+    color: rgb(9, 56, 9);
+}
+.remove{
+    background: #C76868;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 21px;
+    border: 0;
+    cursor: pointer;
+    display: inline;
+    padding: 4px 9px;
+    vertical-align: top;
+    line-height: 100%;   
+}
+select{
+    padding:5px;
+}
+.plus-sign {
+    margin-top: 10px;
+    font-size: 30px;
+}

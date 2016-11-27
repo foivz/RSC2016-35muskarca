@@ -1,0 +1,16 @@
+<div ng-show="cookieSettings.shouldShowCookiePolicyOverlay()">
+  <div ng-if="cookiesDisabled" id="cookiePolicyOverlayError" toggleable active-class="hidden" lnb-info-msg arrow="left" page="cookie" on-close="toggle('cookiePolicyOverlayError', 'on')">
+    <p>
+      {{'mmcore.cookiePolicyOverlay.cookiesDisabled' | translate}}
+    </p>
+  </div>
+  <div ng-if="!cookiesDisabled" lnb-info-msg dont-show-close-button="true" arrow="left" page="cookie">
+    <p>
+      {{'mmcore.cookiePolicyOverlay.info' | translate}}
+      <a href="#/cookieSettings">{{'mmcore.cookiePolicyOverlay.moreInfo' | translate}}</a>
+    </p>
+    <div class="btn-group">
+      <button class="btn btn-primary-light" ng-click="accept()">{{'mmcore.cookiePolicyOverlay.accept' | translate}}</button>
+    </div>
+  </div>
+</div>

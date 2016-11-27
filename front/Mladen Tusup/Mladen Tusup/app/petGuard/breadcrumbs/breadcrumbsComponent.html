@@ -1,0 +1,6 @@
+<div id="account-breadcrumb" class="">
+  <span ng-repeat="item in $ctrl.crumbs" ng-if="item.self && item.self.name">
+		<a class="text" ui-sref="{{item.self.name}}">{{ 'common.' + item.self.name | translate}}</a>
+		<span class="delimiter" ng-if="!$last">&gt;</span> 
+	</span>
+</div>

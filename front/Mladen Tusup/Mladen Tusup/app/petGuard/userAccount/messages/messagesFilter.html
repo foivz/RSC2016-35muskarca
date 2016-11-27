@@ -1,0 +1,45 @@
+<div class="messages-filter dark-theme">
+    <form name="messagesFilterForm" ng-submit="$ctrl.filter(messagesFilterForm, $ctrl.typeId, $ctrl.dateFrom, $ctrl.dateTo)">
+        <div class="grid grid-2 grid-gap split">
+            <div class="field-group grid-item">
+                <!--<label for="category">{{'mmcore.messages.filter.category' | translate}}</label>-->
+                <div class="select-style">
+                    <select id="category"
+                            ng-model="$ctrl.categoryId"
+                            ng-model-options="{ getterSetter: true }"
+                            ng-options="category.categoryId as category.categoryName | translate for category in $ctrl.messagesService.categories">
+                    </select>
+                </div>
+            </div>
+            <div class="field-group grid-item">
+                <!--<label for="type">{{'mmcore.messages.filter.type' | translate}}</label>-->
+                <div class="select-style">
+                    <select id="type"
+                            ng-model="$ctrl.typeId"
+                            ng-options="type.OfferId as type.OfferName | translate for type in $ctrl.types">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-2 grid-gap split not-responsive">
+            <div class="field-group grid-item">
+                <!--<label for="dateFrom">{{'mmcore.common.from' | translate}}</label>-->
+                <input type="date" id="dateFrom" ng-model="$ctrl.dateFrom" placeholder="{{'mmcore.common.from' | translate}}" class="hide-spinbtns" data-date='{"startView": 2}'/>
+            </div>
+            <div class="field-group grid-item">
+                <!--<label for="dateTo">{{'mmcore.common.to' | translate}}</label>-->
+                <input type="date" id="dateTo" ng-model="$ctrl.dateTo" placeholder="{{'mmcore.common.to' | translate}}" class="hide-spinbtns" data-date='{"startView": 2}' />
+            </div>
+        </div>
+
+        <div class="buttons">
+        	<button type="reset" class="btn btn-primary justified" ng-click="$ctrl.cancel()" back-button>
+        	    {{'mmcore.common.cancel' | translate }}
+        	</button>
+        	<button type="submit" class="btn btn-secondary justified" data-ng-disabled="$ctrl.selectedCategory === -1">
+        	    {{'mmcore.common.filter' | translate }} 
+        	</button>
+        </div>
+
+    </form>
+</div>

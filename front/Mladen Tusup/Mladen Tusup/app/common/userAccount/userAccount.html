@@ -1,0 +1,127 @@
+<div class="hero dashboard">
+    <div class="container-fluid" >
+        <div class="row" >
+            
+            <div style="width:33%;overflow:auto;float:left; height:450px;" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+   
+
+                
+<!--Card-->
+<div style="border-radius:10px; background:#9e0b0f; color:#fff" ng-repeat="quiz in quizzes" class="card">
+
+    
+<!--    <img class="img-fluid" src="http://mdbootstrap.com/images/regular/nature/img%20(28).jpg" alt="Card image cap">-->
+    
+    
+    <!--Card content-->
+    <div class="card-block">
+        <!--Title-->
+        <h4 class="card-title">Quiz name: {{quiz.name}}</h4>
+        <!--Text-->
+        <p class="card-text">Number of participants: {{quiz.maxparticipants}}</p>
+       
+        <p class="card-text">Start date: {{quiz.startdate | date:'yyyy-MM-dd'}}</p>
+        
+        <p class="card-text">End date: {{quiz.enddate | date:'yyyy-MM-dd'}}</p>
+        <a style="margin-bottom:5px;" ng-if="$index !== showDetails" ng-click="shouldShowDetails(quiz.idquiz, $index)" class="btn btn-primary">View details</a>
+<!--        <a ng-if="$index === showDetails" ng-click="closeDetails($index)" class="btn btn-primary">Close details</a>-->
+        <div ng-if="$index === showDetails">
+        <div style="margin-top:5px;" ng-repeat="details in currentDetails">
+            Team: {{details.teamname}}, Success: {{details.successRate}} %
+        </div>
+        </div>
+        
+    </div>
+    <!--/.Card content-->
+
+</div>
+              
+<!--/.Card-->
+
+                
+            </div>
+            
+        
+             <div style="width:33%;overflow:auto;float:left;height:450px;" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 form-group">
+
+                <button style="display:inline" ng-click="createNewQuiz()" type="button">~Create a new Quiz!~</button>
+                 <button style="display:inline" ui-sref="iQuiz.common.activeQuizzes" type="button">~View active quizzes~</button>
+                 <form class="clearfix" ng-submit="createQuiz(createQuizForm)" name="createQuizForm">
+                 <div ng-if="shouldCreateNewQuiz">
+
+  <div style="margin-top:10px" class="form-group">
+    <label for="quizName">Quiz name</label>
+    <input required ng-model="quiz.name" type="text" class="form-control" id="quizName" placeholder="Quiz name">
+  </div>
+  <div class="form-group">
+    <label for="quiz.address">Quiz address</label>
+    <input required ng-model="quiz.Address" type="text" class="form-control" id="quizAddress" placeholder="Takes place at:">
+  </div>
+ <div class="form-group">
+    <label for="quizStartDate">Start date</label>
+    <input required ng-model="quiz.startDate" type="date" class="form-control" id="quizStartDate">
+  </div>
+ <div class="form-group">
+    <label for="quizEndDate">End date</label>
+    <input required ng-model="quiz.endDate" type="date" class="form-control" id="quizEndDate">
+  </div>
+  <div class="form-group">
+    <label for="quizNumOfParticipants">Maximum number of participants per team</label>
+    <input required ng-model="quiz.numOfPlayers" type="text" class="form-control" id="quizNumOfParticipants" placeholder="Number of participants">
+  </div>
+<div class="form-group">
+    <label for="quizLength">Duration</label>
+    <input required ng-model="quiz.duration" placeholder="Duration (in minutes)" type="text" class="form-control" id="quizLength">
+</div>
+                     <button type="button" ng-click="showPreviousQuestions()">Add existing question</button>
+<!--                     <button type="button" ng-click="showNewQuestions()">Add new question</button>-->
+                     
+                     <div ng-if="shouldShowNewQuestion">
+                         <input type="text" placeholder="Your question here" required/>
+                     </div>
+                     
+                     <div>
+                     <ul class="list-group">
+  <li ng-init="currentIndex===$index"style="color:black; margin-top:10px;" ng-repeat="selQuestion in selectedQuestions" class="list-group-item">
+    <div>{{selQuestion.question}}</div>
+      <div ng-repeat="checkbox in selQuestion.answerList" ng-if="selQuestion.type === 1">
+          <span>{{checkbox.answer}}</span>
+          </br>
+          <span ng-if="$last"style="border-radius:5px;cursor:pointer;float:right;background-color:#9e0b0f;color:white;margin-bottom:5px" ng-click="returnSelected(selQuestion, currentIndex)">Remove</span>
+      </div>
+  </li>
+</ul>
+                     
+                     
+                     </div>
+                
+                 
+                 </div>
+                  
+                <button class="display:pointer" ng-if="shouldCreateNewQuiz" type="submit">Create quiz </button>
+                 </form>
+            </div>
+            <div ng-if="shouldShowPreviousQuestions">List of previously used questions
+            </div>
+            <div style="text-align:center;display:block" ng-if="!shouldShowPreviousQuestions" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <img style="opacity:0.3" class="badgeIcon opacity" ng-src="assets/img/badge1.png" alt="badge" />
+                <img class="badgeIcon" ng-src="assets/img/badge3.png" alt="badge" />
+                <img class="badgeIcon" ng-src="assets/img/badge2.png" alt="badge" />
+            </div>
+             <div ng-if="shouldShowPreviousQuestions" style="width:33%; height:450px;overflow:auto;float:left" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                
+                 <ul class="list-group">
+  <li ng-click="removeItem($index, question)" style="color:black; cursor:pointer" ng-repeat="question in questions" class="list-group-item">
+    <p>Question {{$index+1}}.: </p>
+    <div>{{question.question}}</div>
+      <div ng-repeat="checkbox in question.answerList" ng-if="question.type === 1">
+          <span>{{checkbox.answer}}</span>
+      </div>
+  </li>
+</ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+

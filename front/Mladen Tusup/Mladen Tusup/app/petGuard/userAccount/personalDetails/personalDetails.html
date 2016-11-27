@@ -1,0 +1,288 @@
+﻿<div>
+  <h1 class="grid grid-fixed grid-2 grid-2-ratio-3-1 grid-vertical-align-top not-responsive">
+    <span class="grid-item">{{'mmcore.personalDetails' | translate}}</span>
+    <span class="grid-item text-right">
+      <span class="ir svg-icon more-info small vertical-align pointer" ng-click="lnbModalsService.open('personalDetailsInfoModal')">{{'common.app.infoText' | translate}}</span>
+    </span>
+  </h1>
+  <hr>
+
+  <div lnb-modals ng-show="subview" ng-switch="subview" class="lnb-modals" ng-class="{'lnb-modalopen': subview === 'personalDetailsInfoModal'}">
+    <div ng-switch-when="personalDetailsInfoModal" class="lnb-modal">
+      <lnb-modal-component lnb-modal-content="{{'mmcore.personalDetails.info-text' | translate}}">
+      </lnb-modal-component>
+    </div>
+  </div>
+
+  <p ng-bind-html="'mmcore.personalDetails.text1' | translate"></p>
+
+  <div class="success-message" ng-if="personalDetailsForm.$success && personalDetailsForm.$pristine">
+    {{ 'mmcore.personalDetails.success' | translate }}
+  </div>
+
+  <form class="personal-details-form light-theme container container-gap-larger background-color-white" role="form"
+        name="personalDetailsForm" novalidate="" angular-fn-form-validator
+        ng-submit="updatePersonalDetails(personalDetailsForm, confirmationPassword)">
+				
+		<p class="error-message" ng-if="showErrorMessage">
+			<span>{{ 'mmcore.personalDetails.error' | translateError }}</span>
+		</p>
+		<p class="error-message" ng-if="invalidInputs.unexpectedError">
+			<span>{{ 'mmcore.personalDetails.technicalError' | translateError }}</span>
+		</p>
+    <div ng-if="showAccountEditMode">
+      <p>{{'common.app.personalDetails.dataCannotBeChanged' | translate}}</p>
+      <table>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.gender' | translate}}</th>
+          <td>
+            <div ng-switch="personalDetails.IDMMGender">
+              <span ng-switch-when="M">{{'common.app.pws.personalDetails.M' | translate}}</span>
+              <span ng-switch-when="F">{{'common.app.pws.personalDetails.F' | translate}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.first-name' | translate}}</th>
+          <td>{{personalDetails.FirstName}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.last-name' | translate}}</th>
+          <td>{{personalDetails.LastName}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.date-of-birth' | translate}}</th>
+          <td>{{personalDetails.DateOfBirth | toDate | date:'dd/MM/yyyy'}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.place-of-birth' | translate}}</th>
+          <td>{{personalDetails.PlaceOfBirth}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.locality' | translate}}</th>
+          <td>{{selectedCity}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div ng-if="!showAccountEditMode">
+      <table>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.gender' | translate}}</th>
+          <td>
+            <div ng-switch="personalDetails.IDMMGender">
+              <span ng-switch-when="M">{{'common.app.pws.personalDetails.M' | translate}}</span>
+              <span ng-switch-when="F">{{'common.app.pws.personalDetails.F' | translate}}</span>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.first-name' | translate}}</th>
+          <td>{{personalDetails.FirstName}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.last-name' | translate}}</th>
+          <td>{{personalDetails.LastName}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.securitySettings.salutation' | translate}}</th>
+          <td>{{personalDetails.Salutation}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.date-of-birth' | translate}}</th>
+          <td>{{personalDetails.DateOfBirth | toDate | date:'dd/MM/yyyy'}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.place-of-birth' | translate}}</th>
+          <td>{{personalDetails.PlaceOfBirth}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.street' | translate}}&nbsp;*</th>
+          <td>{{personalDetails.StreetAddress}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.post-code' | translate}}&nbsp;*</th>
+          <td>{{selectedPostcode}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.locality' | translate}}</th>
+          <td>{{selectedCity}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.profession' | translate}}</th>
+          <td>{{personalDetails.Profession}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.common.email-address' | translate}}&nbsp;*</th>
+          <td>{{personalDetails.PrimaryEmail}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.mobile-number' | translate}}</th>
+          <td>{{personalDetails.MobilePhone}}</td>
+        </tr>
+
+        <tr>
+          <th>{{'mmcore.personalDetails.phone-number' | translate}}</th>
+          <td>{{personalDetails.HomePhone}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div ng-if="showAccountEditMode" class="field-group">
+      <input id="street" name="street" type="text" ng-model="personalDetails.StreetAddress" required=""/>
+      <label>{{'mmcore.personalDetails.street' | translate}}&nbsp;*</label>
+
+      <div class="error-message" ng-if="(showFieldErrorMessage || showErrorMessage) && invalidInputs.street"/>
+      <span>{{'mmcore.personalDetails.street.error' | translate}}</span>
+    </div>
+</div>
+
+<div ng-show="showAccountEditMode" class="field-group post-codes">
+  <!--
+              <postcodes-typeahead input-name="postcodes" items="locations"
+                                                       prompt="{{'mmcore.personalDetails.post-code-prompt-text' | translate}}"
+                                                       title="postcode" subtitle="customercity"
+                                                       model="selectedPostcode"
+                                                       on-select="onItemSelected"
+                                                       input-class="form-control"
+                                                       input-type="tel"
+                                                       change-input="changePostalCode"
+                                                       ng-click="scroll.PostCode=shouldScrollToField"
+                                                       input-blur="recheckForm" input-to-check="locality"
+                      >
+              </postcodes-typeahead>
+              -->
+  <post-codes items="locations" on-select="onItemSelected" change-input="changePostalCode" class="post-code">
+    <label>{{'mmcore.personalDetails.post-code' | translate}}&nbsp;*</label>
+    <input type="tel" class="form-control" id="postcodes" name="postcodes"
+           tabindex="8" ng-model="selectedPostcode" ng-click="scroll.PostCode=shouldScrollToField"
+           autocomplete="off" autocorrect="off" autocapitalize="off"
+           spellcheck="false" ng-blur="recheckForm(personalDetailsForm,'locality')"/>
+  </post-codes>
+  <div class="error-message" ng-if="(showFieldErrorMessage || showErrorMessage) && invalidInputs.locality">
+    {{'mmcore.personalDetails.post-code.error' | translate}}
+  </div>
+</div>
+
+<div ng-if="showAccountEditMode" class="field-group">
+  <input disabled name="locality" type="text" ng-model="selectedCity" required="true">
+  <label>{{'mmcore.personalDetails.locality' | translate}}&nbsp;:</label>
+</div>
+
+
+<div ng-if="showAccountEditMode" class="field-group">
+  <input class="form-control" id="profession" name="profession" type="text" ng-model="personalDetails.Profession"/>
+  <label>{{'mmcore.personalDetails.profession' | translate}}</label>
+</div>
+
+<div ng-show="showAccountEditMode" class="field-group">
+  <input class="form-control ng-pristine ng-invalid ng-invalid-required" name="primaryEmail" type="email"
+         ng-model="personalDetails.PrimaryEmail" ng-change="changePrimaryEmail()" required=""
+         autocomplete="off" prevent-default data-prevent-event="copy" validate-on="dirty"
+         validator="isEmailValid(personalDetails.PrimaryEmail)"
+         lnb-no-white-space lnb-scroll-to="scroll.primaryEmail" ng-blur="recheckForm('primaryEmail')"/>
+  <label>{{'mmcore.common.email-address' | translate}}&nbsp;*</label>
+
+  <div class="error-message notransition"
+       ng-if="(showFieldErrorMessage || showErrorMessage) && invalidInputs.primaryEmail">
+    {{'mmcore.personalDetails.primaryEmail.error-'+invalidInputs.primaryEmail | translate}}
+  </div>
+</div>
+
+<div ng-show="showAccountEditMode" class="field-group">
+  <input class="form-control" name="emailConfirm" type="email"
+         ng-model="confirmEmail"
+         ng-disabled="primaryEmailNotChanged"
+         autocomplete="off"
+         prevent-default data-prevent-event="paste"
+         validate-on="submit" validator="confirmEmailAddress(confirmEmail) === true"
+         lnb-no-white-space
+         lnb-scroll-to="scroll.confirmEmail"
+         ng-blur="recheckForm('emailConfirm')"/>
+  <label>{{'mmcore.common.retype-email-address' | translate}}<span
+    ng-hide="primaryEmailNotChanged">&nbsp;*</span></label>
+
+  <div class="error-message notransition"
+       ng-if="(showFieldErrorMessage || showErrorMessage) && !primaryEmailNotChanged && invalidInputs.emailConfirm">
+    <span>{{'mmcore.personalDetails.emailsDoNotMatch' | translate}}</span>
+  </div>
+</div>
+
+<div ng-model-options="{ allowInvalid: true }" ng-show="showAccountEditMode" class="field-group">
+  <input class="form-control" type="tel" id="mobileNumber" name="mobileNumber" ng-model="personalDetails.MobilePhone"
+         lnb-phone-number/>
+  <label>{{'mmcore.personalDetails.mobile-number' | translate}}</label>
+</div>
+
+<div ng-model-options="{ allowInvalid: true }" ng-if="showAccountEditMode" class="field-group">
+  <input class="form-control" type="tel" id="phoneNumber" name="phoneNumber" ng-model="personalDetails.HomePhone"
+         lnb-phone-number/>
+  <label>{{'mmcore.personalDetails.phone-number' | translate}}</label>
+</div>
+
+<div ng-if="showAccountEditMode" class="field-group">
+  <input class="form-control" type="text" id="salutation" name="salutation" ng-model="personalDetails.Salutation"/>
+  <label>{{'mmcore.securitySettings.salutation' | translate}}</label>
+</div>
+<!--<div class="error-message" ng-if="(showFieldErrorMessage || showErrorMessage) && invalidInputs.salutation">
+                        <span>{{'common.app.pws.personalDetails.salutationIsRequired' | translate}}</span>
+    </div>-->
+
+<div ng-if="showAccountEditMode" class="bank-account">
+  <ng-include src="'pws/bankAccount/bankAccount.html'"></ng-include>
+</div>
+
+<div ng-if="showAccountEditMode" class="field-group">
+  <input type="password" name="confirmationPassword"
+         ng-model="confirmationPassword.password"
+         required="" autocomplete="off"
+         lnb-scroll-to="scroll.confirmationPassword"
+         ng-blur="recheckForm('confirmationPassword')"/>
+  <label>{{'mmcore.common.confirm-password' | translate}}</label>
+
+  <div class="error-message" ng-if="(showFieldErrorMessage || showErrorMessage) && invalidInputs.confirmationPassword">
+    <span>{{'mmcore.personalDetails.'+invalidInputs.confirmationPassword | translate}}</span>
+  </div>
+</div>
+
+<div ng-if="!showAccountEditMode" class="buttons text-center">
+  <button type="button" ng-click="changeAccountInformation()">
+    {{'common.app.pws.personalDetails.changeAccountInformation' | translate}}
+  </button>
+</div>
+
+<div ng-if="showAccountEditMode" class="btns-loader-container">
+  <div class="inline-loader text-center" ng-if="operationProgress.updatePersonalDetails">
+    <i class="fa fa-spinner fa-spin dg-spinner"></i>
+  </div>
+  <div>
+    <div class="buttons">
+      <button ng-click="changeAccountInformation();" type="button" class="btn btn-primary" back-button>
+        {{'mmcore.common.cancel' | translate }}
+      </button>
+      <button type="submit" data-ng-disabled="!personalDetailsForm.$dirty" class="btn btn-secondary justified">
+        {{'mmcore.common.save' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+</form>
+</div>

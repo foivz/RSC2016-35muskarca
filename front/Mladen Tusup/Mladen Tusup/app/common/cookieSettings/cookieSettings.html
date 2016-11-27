@@ -1,0 +1,17 @@
+<div class="cookies" lnb-scroll="scroll.top">
+  <div class="lnb-forms">
+    <h1 ng-class="{'sub-header': isPhone, 'txt-white':!isPhone}">
+      {{'mmcore.cookieSettings' | translate}}
+    </h1>
+    <form name="cookieSettingsForm" ng-submit="updateCookies(cookieSettingsForm)" role="form">
+      <div ng-show="cookieSettingsForm.$updatedSuccessfully && cookieSettingsForm.$pristine" lnb-info-msg dont-show-close-button="true" page="cookie">
+        {{ 'mmcore.cookieSettings.success' | translate }}
+      </div>
+      <div class="row">
+        <div>
+          <ng-include src="'common/cookieSettings/cookieSettingsForm.html'"></ng-include>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

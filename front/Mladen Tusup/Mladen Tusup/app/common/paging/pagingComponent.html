@@ -1,0 +1,41 @@
+<div class="paging-component container container-gap text-center">
+  <ul>
+    <!--page text-->
+    <li style="color:white; display:inline;" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0">{{'common.app.pagingComponent-page' | translate}}</li>
+
+    <!--previous page-->
+    <li class="pointer" style="color:white; display:inline;" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.currentPage!=0 && $ctrl.pagingData.numOfPages>0"><a ng-click="$ctrl.fetchPreviousPage()">{{'common.app.pagingComponent-previous' | translate}}</a></li>
+
+    <!--first page-->
+    <li class="pointer" style="display:inline;  color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0 && $first"><a ng-click="$ctrl.fetchPage($index)">{{$index+1}}</a></li>
+
+    <!--more pages...-->
+    <li ng-click="$ctrl.fetchPage($index)" style="display:inline;  color:white ; margin-left:5px" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0 && (($ctrl.pagingData.currentPage+1) - 1 > 3)">{{'common.app.pagingComponent-more' | translate}}</li>
+
+    <!--previous pages-->
+    <li class="pointer" style="display:inline;  color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>=6 && ($index===($ctrl.pagingData.currentPage-1) || $index===($ctrl.pagingData.currentPage-2)) && $middle"><a ng-click="$ctrl.fetchPage($index)">{{$index+1}}</a></li>
+
+    <!--current page-->
+    <li class="pointer" style="display:inline;  color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index"  ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>=6 && $index===$ctrl.pagingData.currentPage && $middle"><a ng-click="$ctrl.fetchPage($index)">{{$ctrl.pagingData.currentPage+1}}</a></li>
+
+    <!--next pages-->
+    <li class="pointer" style="display:inline; color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>=6 && ($index===($ctrl.pagingData.currentPage+1) || $index===($ctrl.pagingData.currentPage+2)) && $middle"><a ng-click="$ctrl.fetchPage($index)">{{$index+1}}</a></li>
+
+    <!--less than 6 pages, display all -->
+    <li class="pointer" style="display:inline;  color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0 && $ctrl.pagingData.numOfPages<6 && $index<5 && $middle"><a ng-click="$ctrl.fetchPage($index)">{{$index+1}}</a></li>
+
+    <!--more than 6 pages-->
+    <!--<li style="display:inline;  color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>=6 && $middle"><a ng-click="$ctrl.fetchPage($index)">{{$index+1}}</a></li>-->
+
+    <!--more pages...-->
+    <li ng-click="$ctrl.fetchPage($index)" style="display:inline;  color:white ; margin-left:5px" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0 && (($ctrl.pagingData.currentPage+1) + 3 < $ctrl.pagingData.lastPage)">{{'common.app.pagingComponent-more' | translate}}</li>
+
+    <!--last page-->
+    <li class="pointer" style="display:inline;  color:white ; margin-left:5px" ng-repeat="page in $ctrl.getPageNumber($ctrl.pagingData.numOfPages) track by $index" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0 && $ctrl.pagingData.numOfPages!=1 && $last"><a ng-click="$ctrl.fetchPage($index)">{{$index+1}}</a></li>
+
+    <!--next page-->
+    <li class="pointer" style="color:white; display:inline;" ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages>0 && $ctrl.pagingData.numOfPages!==1 && !(($ctrl.pagingData.currentPage+1)===$ctrl.pagingData.lastPage)"><a ng-click="$ctrl.fetchNextPage()">{{'common.app.pagingComponent-next' | translate}}</a></li>
+  </ul>
+</div>
+<!--no pages-->
+ <!--<div ng-if="!$ctrl.pagingData.isFetching && $ctrl.pagingData.numOfPages===0">No data</div>-->

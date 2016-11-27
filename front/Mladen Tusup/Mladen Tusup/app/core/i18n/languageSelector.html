@@ -1,0 +1,10 @@
+<div class="navbar navbar-app navbar-absolute-bottom lang">
+  <div class="btn-group justified">
+    <span class="lnb-btn btn-info btn-s  btn-navbar"
+      ng-repeat="l in language.availableLanguages"
+      ng-click="language.IDMDLanguage = l.IDMDLanguage"
+      ng-class="{ active: language.IDMDLanguage === l.IDMDLanguage }">
+      {{l.IDMDLanguage}}
+    </span>
+  </div>
+</div>

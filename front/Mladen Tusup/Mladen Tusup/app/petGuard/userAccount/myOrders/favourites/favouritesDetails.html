@@ -1,0 +1,101 @@
+<section>
+  <div class="grid grid-2 grid-2-ratio-1-3 grid-vertical-align-top">
+    <div class="grid-item">
+      <div><strong>{{'mmcore.playHistory.detail.sb.total-stake' | translate}}</strong> {{favourite.totalStake | lnbCurrency:false}}</div>
+      <div><strong>{{'common.app.pws.favorites.gameNumberOfDraws' | translate}}</strong> : {{favourite.timesPlayed}}</div>
+    </div>
+
+    <div class="grid-item">
+      <div ng-if="favourite.gameBoardStacks.length>0">
+          <strong>{{'mmcore.playHistory.detail.dg.your-grid' | translate}}</strong>
+      </div>
+
+      <div class="game-board-stack" ng-if="favourite.gameBoardStacks.length>0" ng-init="boardStackIndex=$index" ng-repeat="gameBoardStack in favourite.gameBoardStacks track by $index">
+        <div class="game-board" ng-init="boardIndex=$index" ng-repeat="board in gameBoardStack.Boards track by $index">
+          <ul class="game-grid" ng-if="gameBoardStack.GameId === 'Lotto6' || gameBoardStack.GameId === 'SuperLotto' || gameBoardStack.GameId === 'Keno' || gameBoardStack.GameId === 'Pick3'">
+            <li>
+              <span>{{$index+1}}.</span>
+              <ul class="number-picks">
+                <li class="circle-numbers-{{gameBoardStack.GameId}}" ng-repeat="PickValue in board.PickValues track by $index" ng-class="{'matched': PickValue.matched, 'matched-bonus': PickValue.matchedBonus, 'fixed': PickValue.type === 'fixed', 'variable': PickValue.type === 'variable'}">{{PickValue.value}}
+                  <span ng-if="!$last"> - </span>
+                </li>
+              </ul>
+              <span class="board-pick-system-name" ng-if="board.PickSystemName && board.PickSystemName.length">{{board.PickSystemName}}</span>
+              <span class="board-stake">{{board.Stake | lnbCurrency:false}}</span>
+              <hr ng-if=""/>
+            </li>
+          </ul>
+
+          <ul class="game-grid" ng-if="gameBoardStack.GameId==='Elot'">
+            <li>
+              <span>{{$index+1}}.</span>
+              <ul class="number-picks">
+                <li class="circle-numbers-{{gameBoardStack.GameId}}" ng-repeat="PickValue in board.PickValues.numbers track by $index" ng-class="{'matched': PickValue.matched, 'matched-bonus': PickValue.matchedBonus}">{{PickValue.value}} {{$last ? ':' : ''}}
+                  <span ng-if="!$last"> - </span>
+                </li>
+              </ul>
+              <div class="grid-stars" ng-if="board.PickValues.stars.length > 0 && (board.PickSystem !== 'Simple')">
+                <span  ng-if="gameBoardStack.GameId === 'Elot'" class="star-numbers-{{gameBoardStack.GameId}}" ng-repeat="PickValue in board.PickValues.stars track by $index" ng-class="{'matched': PickValue.matched, 'matched-bonus': PickValue.matchedBonus}">{{PickValue.value}}
+                </span>
+              </div>
+              <div class="grid-stars" ng-if="board.PickValues.stars.length > 0 && (board.PickSystem === 'Simple')">
+                <span  ng-if="gameBoardStack.GameId === 'Elot'" class="star-numbers-{{gameBoardStack.GameId}}" ng-repeat="PickValue in board.PickValues.stars track by $index" ng-class="{'matched': PickValue.matched, 'matched-bonus': PickValue.matchedBonus}">{{PickValue.value}}
+                </span>
+              </div>
+              <span class="board-pick-system-name" ng-if="board.PickSystemName && board.PickSystemName.length">{{board.PickSystemName}}</span>
+              <span class="board-stake">{{board.Stake | lnbCurrency:false}}</span>
+            </li>
+          </ul>
+
+          <ul class="game-grid" ng-if="gameBoardStack.GameId==='JokerPlus' && boardStackIndex == 0">
+            <li>
+              <span>{{$index+1}}.</span>
+                <ul class="number-picks">
+                  <li class="square-numbers-JokerPlus" ng-repeat="PickValue in board.PickValues.numbers track by $index" ng-class="{'matched': PickValue.matched, 'matched-bonus': PickValue.matchedBonus}">{{PickValue.value}}
+                  <span ng-if="!$last"> - </span>
+                  </li>
+                </ul>
+              <div class="grid-zodiac" ng-if="board.PickValues.zodiac.value.length > 0">
+                <span class="star-numbers lnb-icon-{{board.PickValues.zodiac.value}} zodiac-values" ng-class="{'matched': board.PickValues.zodiac.matched}"></span>
+                  <strong>{{board.PickValues.zodiac.value}}</strong>
+              </div>
+                <span class="board-pick-system-name" ng-if="board.PickSystemName && board.PickSystemName.length">{{board.PickSystemName}}</span>
+                <span class="board-stake">{{board.Stake | lnbCurrency:false}}</span>
+            </li>
+          </ul>
+
+          <div class="jokerPlus" ng-if="boardStackIndex>0 && boardIndex===0">
+            <div>
+              <strong>{{'mmcore.playHistory.detail.dg.your-combination' | translate}}</strong>
+            </div>
+            <ul class="game-grid" ng-if="gameBoardStack.GameId==='JokerPlus'">
+              <li>
+                <span>{{$index+1}}.</span>
+                <ul class="number-picks">
+                  <li class="square-numbers-JokerPlus" ng-repeat="PickValue in board.PickValues.numbers track by $index" ng-class="{'matched': PickValue.matched, 'matched-bonus': PickValue.matchedBonus}">{{PickValue.value}}<span ng-if="!$last"> - </span>
+                  </li>
+                </ul>
+                <div class="grid-zodiac" ng-if="board.PickValues.zodiac.value.length > 0">
+                <span  class="star-numbers lnb-icon-{{board.PickValues.zodiac.value}} zodiac-values" ng-class="{'matched': board.PickValues.zodiac.matched}"></span><!--<strong>{{board.PickValues.zodiac.value}}</strong>--><strong>{{'pws.playHistory.jokerplus.zodiacsign.' + board.PickValues.zodiac.value | translate}}</strong>
+                </div>
+                <span class="board-pick-system-name" ng-if="board.PickSystemName && board.PickSystemName.length">{{board.PickSystemName}}</span>
+                <span class="board-stake">{{board.Stake | lnbCurrency:false}}</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <input class="grid-item" type="text" ng-model="favourite.alias" name="alias" value="{{favourite.alias}}">
+    <div class="buttons">
+      <button ng-click="updateGameAlias(favourite, favourite.alias)" type="button">{{'common.app.pws.favorites.gameRename' | translate}}</button>
+      <button ng-click="deleteFavourite(favourite)">{{'common.app.pws.favorites.gameRemove' | translate}}</button>
+      <button type="button">{{'common.app.pws.favorites.gamePlayAgain' | translate}}</button>
+    </div>
+  </div>
+
+</section>

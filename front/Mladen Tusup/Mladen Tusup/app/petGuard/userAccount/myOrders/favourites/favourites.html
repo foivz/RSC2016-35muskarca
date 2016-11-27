@@ -1,0 +1,65 @@
+<h1>{{'common.app.pws.favorites' | translate}}</h1>
+<p>{{'common.app.pws.favorites.info' | translate}}</p>
+
+<div class="container container-gap-large light-theme background-color-white">
+  <table id="myGamesFavourite" class="lnbTable" cellpadding="0" cellspacing="0">
+    <colgroup>
+      <col class="col-arrow">
+      <col class="col-name">
+      <col class="col-game">
+      <col class="col-action">
+	</colgroup>
+
+    <thead>
+      <tr>
+        <th>&nbsp;</th>
+        <th>{{'common.app.pws.favorites.gameName' | translate}}</th>
+        <th>{{'common.app.pws.favorites.gameType' | translate}}</th>
+        <th>{{'common.app.pws.favorites.gameActions' | translate}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="pointer" ng-repeat-start="favourite in listOfFavouriteGames" ng-click="showHideDetails(favourite);">
+        <td ng-if="!favourite.visible"><a href="" class="color-blue"><i class="fa angle fa-angle-right fa-1" aria-hidden="true"></i></a></td>
+        <td ng-if="favourite.visible"><a href="" class="color-blue"><i class="fa angle fa-angle-down fa-1" aria-hidden="true"></i></a></td>
+        <td>{{favourite.alias}}</td>
+        <td>{{favourite.gameName}}</td>
+        <td class="no-wrap">
+          <a href="" class="color-blue">{{'common.app.pws.favorites.gamePlayAgain' | translate}}</a>
+          <a ng-click="showHideDetails(favourite);" href="" class="color-green">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+          <a href="" class="color-red">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
+            </span>
+          </a>
+        </td>
+      </tr>
+      <tr ng-repeat-end >
+        <td class="favoriteGame-details" colspan="6" ng-if="favourite.visible && favourite.hasDetails">
+          <div ng-include src="'pws/playerAccount/myGames/favourites/favouritesDetails.html'"></div> 
+        </td>
+        <td class="favoriteGame-details" colspan="6" ng-if="!favourite.hasDetails">
+          {{'mmcore.playHistory.detail.no-details' | translate}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="container container-gap-larger">
+    <div class="grid grid-1 color-green" ng-if="favouritesService.isFetching">
+      <i class="fa fa-spinner fa-spin fa-2x"></i>
+    </div>
+    <div class="notice message" ng-if="!favouritesService.hasMoreFavourites && !favouritesService.isFetching && listOfFavouriteGames.length === 0">
+      {{'mmcore.playHistory.table.no-items' | translate}}
+    </div>
+    <div class="notice message" ng-if="!favouritesService.hasMoreFavourites && !favouritesService.isFetching && listOfFavouriteGames.length != 0">
+      {{'common.app.pws.favorites.noMoreFavorites' | translate}}
+   </div>
+  </div>
+</div>

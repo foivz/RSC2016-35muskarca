@@ -1,0 +1,59 @@
+<h1 class="grid grid-fixed grid-2 grid-2-ratio-3-1 grid-vertical-align-middle not-responsive">
+	<span class="grid-item">{{ 'mmcore.closeAccount' | translate }}</span>
+	<span class="grid-item text-right">
+		<span class="ir svg-icon more-info small vertical-align pointer" ng-click="lnbModalsService.open('closeAccountInfoModal')">{{'common.app.infoText' | translate}}</span>
+	</span>
+</h1>
+
+<div lnb-modals ng-show="subview" ng-switch="subview" class="lnb-modals" ng-class="{'lnb-modalopen': subview === 'closeAccountInfoModal'}">
+  <div ng-switch-when="closeAccountInfoModal" class="lnb-modal">
+    <lnb-modal-component lnb-modal-content="{{'mmcore.closeAccount.info-txt' | translate}}">
+    </lnb-modal-component>
+  </div>
+</div>
+
+<div class="closeAccount">
+  <div class="page-info split">
+    <div ng-if="isAccountClosable" ng-bind-html="'mmcore.closeAccount.intro-txt.closable' | translate"></div>
+    <div ng-if="!isAccountClosable" ng-bind-html="'mmcore.closeAccount.intro-txt.not-closable' | translate" class="split"></div>
+    <p class="error-message" ng-if="!isAccountClosable">{{ 'mmcore.closeAccount.error.not-closable' | translateError}}</p>
+  </div>
+
+
+  <section id="close-account" ng-if="isAccountClosable" class="light-theme">
+    <dl class="lnbDefinitionList">
+      <dd>
+
+        <form ng-submit="closeAccount(closeAccountForm, closeAccountReason, closeAccountPassword)" name="closeAccountForm" class="form-horizontal" novalidate="">
+					<p class="error-message" ng-if="closeAccountForm.error.reason && closeAccountForm.$pristine"><span>{{ 'mmcore.closeAccount.' + closeAccountForm.error.reason | translateError}}</span></p>
+
+          <div class="field-group">
+            <label class="control-label lnb-label" for="closeAccountReason" dont-blur="true">{{'mmcore.closeAccount.reason'
+              | translate}}</label>
+            <input class="form-control" type="text"
+                   ng-model="closeAccountReason"
+                   name="closeAccountReason"
+                   id="closeAccountReason"
+                   placeholder="{{'mmcore.closeAccount.type-reason' | translate}}"/>
+          </div>
+
+          <div class="field-group">
+            <label class="control-label lnb-label" for="closeAccountPassword" dont-blur="true">{{'mmcore.common.confirm-password'
+              | translate}}</label>
+            <input class="form-control" type="password"
+                   ng-model="closeAccountPassword"
+                   name="closeAccountPassword"
+                   id="closeAccountPassword"
+                   required=""
+                   placeholder="{{'mmcore.common.please-confirm-password' | translate}}"/>
+          </div>
+
+          <button type="submit" data-ng-disabled="closeAccountForm.$invalid" class="btn btn-secondary justified">
+            {{'mmcore.closeAccount.close-account' | translate}}
+          </button>
+        </form>
+      </dd>
+    </dl>
+  </section>
+</div>
+

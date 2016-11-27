@@ -1,0 +1,9 @@
+<div>
+  <ul>
+    <li ng-repeat="l in language.availableLanguages">
+      <a class="btn btn-s" ng-click="language.IDMDLanguage = l.IDMDLanguage">
+        {{l.text | uppercase}}
+      </a>
+    </li>
+  </ul>
+</div>

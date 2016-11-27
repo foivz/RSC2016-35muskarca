@@ -1,0 +1,31 @@
+<nav class="account-menu {{$ctrl.theme}}" ng-repeat="item in $ctrl.accountService.accountNavigation">
+	<ul class="{{item.cssclass}}">
+		<li ng-repeat="accountItem in item.fwnavigationgroups[0].fwnavigationitems" class="{{accountItem.cssclass}}" ng-if="item.cssclass.indexOf('submenu') == -1">
+			<a href="" ui-sref="{{accountItem.area}}.{{accountItem.action}}" ui-sref-active="active">
+				{{accountItem.text}}
+				<i class="fa fa-credit-card fa-lg" aria-hidden="true"
+				   ng-if="accountItem.cssclass.indexOf('credit-card-icon') > -1"></i>
+				<div lnb-undelivered-messages-indicator class="badge"
+					 ng-if="accountItem.cssclass.indexOf('badge-message') > -1"></div>
+			</a>
+		</li>
+		<li ng-click="$ctrl.showHideSubMenu()" ng-if="item.cssclass.indexOf('submenu') > -1" ng-class="{submenu: item.cssclass.indexOf('submenu') > -1}">
+			<a href="" ui-sref-active="active" > {{item.text}}
+				<i ng-show="!$ctrl.showSubMenu" class="fa fa-caret-down" aria-hidden="true"></i>
+				<i ng-show="$ctrl.showSubMenu" class="fa fa-caret-up" aria-hidden="true"></i>
+			</a>
+			<ul ng-if="$ctrl.showSubMenu" ng-click="$ctrl.showHideSubMenu()">
+				<li  ng-repeat="accountItem in item.fwnavigationgroups[0].fwnavigationitems" class="{{accountItem.cssclass}}">
+					<a href="" ui-sref="{{accountItem.area}}.{{accountItem.action}}" ui-sref-active="active">
+						{{accountItem.text}}
+						<i class="fa fa-credit-card fa-lg" aria-hidden="true"
+						   ng-if="accountItem.cssclass.indexOf('credit-card-icon') > -1"></i>
+						<div lnb-undelivered-messages-indicator class="badge"
+							 ng-if="accountItem.cssclass.indexOf('badge-message') > -1"></div>
+					</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<hr ng-if="!$last" />
+</nav>

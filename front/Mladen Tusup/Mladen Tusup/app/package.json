@@ -1,0 +1,16 @@
+{
+  "name": "petguards",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {},
+  "description": "PetGuars is a platform to find reliable caretakers for your pet.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mladen",
+  "license": "ISC",
+  "devDependencies": {
+    "angular-translate": "^2.13.0"
+  }
+}
