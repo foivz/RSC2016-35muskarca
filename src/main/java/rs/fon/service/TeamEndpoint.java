@@ -6,7 +6,9 @@
 package rs.fon.service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.ws.rs.GET;
@@ -47,10 +49,11 @@ public class TeamEndpoint {
 
     @GET
     @Path("{teamId}/quiz/{quizId}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response registerTeamForQuiz(@PathParam("teamId") Integer teamId, @PathParam("quizId") Integer quizId) {
         EntityManager em = EMF.createEntityManager();
         try {
-            RegistrationQuizTeam singleResult = em.createQuery("select r from RegistrationQuizTeam r where r.idquiz=:qt AND r.idteam=:tt", RegistrationQuizTeam.class).setParameter("qt", quizId).setParameter("tt", teamId).getSingleResult();
+            RegistrationQuizTeam singleResult = em.createQuery("select r from RegistrationQuizTeam r where r.idquiz.idquiz =:qt AND r.idteam.idteam=:tt", RegistrationQuizTeam.class).setParameter("qt", quizId).setParameter("tt", teamId).getSingleResult();
         } catch (NoResultException e) {
             DarkoResponse dr = new DarkoResponse(false, null, "You are allready registred for this event.");
             em.close();
@@ -59,15 +62,18 @@ public class TeamEndpoint {
         RegistrationQuizTeam r = new RegistrationQuizTeam();
         r.setIdteam(new Team(teamId));
         r.setIdquiz(new Quiz(quizId));
-
+        r.setPin(r.getIdregistration() + "qgv4a");
         manager.persist(em, r);
-        DarkoResponse dr = new DarkoResponse(true, null, null);
+        Map map = new HashMap();
+        map.put("pin", r.getPin());
+        DarkoResponse dr = new DarkoResponse(true, map, null);
         em.close();
         return Response.ok().entity(dr).build();
     }
 
     @GET
     @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getTeams(@HeaderParam("authorization") String socid) {
         EntityManager em = EMF.createEntityManager();
         List<Team> resultList = em.createQuery("SELECT tt from UserPlayer tm left join tm.teamList tt WHERE tm.socialnetid=:sid", Team.class).setParameter("sid", socid).getResultList();

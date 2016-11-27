@@ -13,6 +13,7 @@
     <class>rs.fon.domain.UserAnswer</class>
     <class>rs.fon.domain.Answer</class>
     <class>rs.fon.domain.QuizQuestion</class>
+    <class>rs.fon.domain.Stat</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://161.53.120.89:3306/hackatondbfon?zeroDateTimeBehavior=convertToNull"/>

@@ -49,9 +49,10 @@ public class QuizEndpoint {
         tokenHelper = new Base64Token();
     }
 
-    @POST
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("{quizId}")
-    public Response startQuiz(@HeaderParam("authorization") String token, @PathParam("quizId") Integer quizId) {
+    public Response startQuiz(@PathParam("quizId") Integer quizId) {
         EntityManager em = EMF.createEntityManager();
 //        List<UserPlayer> resultList = em.createQuery("SELECT u FROM Quiz q INNER JOIN q.registrationQuizTeamList r LEFT JOIN r.idteam t LEFT JOIN t.userPlayerList u WHERE q.idquiz = :id", UserPlayer.class).setParameter("id", quizId).getResultList();
         List<RegistrationQuizTeam> resultList = em.createQuery("SELECT r FROM Quiz q LEFT JOIN q.registrationQuizTeamList r WHERE q.idquiz = :id", RegistrationQuizTeam.class).setParameter("id", quizId).getResultList();
@@ -69,6 +70,7 @@ public class QuizEndpoint {
             }
         }
         DarkoResponse dr = new DarkoResponse(true, true, null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 
@@ -88,13 +90,13 @@ public class QuizEndpoint {
         }
 
         String query = "INSERT INTO mladenquiz ( idquiz1, idquestion1) values (";
-        for(Question ques: q123){
-            query += q.getIdquiz() + "," + ques.getIdquestion()+"),(";
+        for (Question ques : q123) {
+            query += q.getIdquiz() + "," + ques.getIdquestion() + "),(";
 //            MladenQuiz mq= new MladenQuiz(ques.getIdquestion(), pojo.getIdquiz());
 //            manager.persist(em, mq);
         }
-        query = query.substring(0, query.length()-2);
-        System.out.println("####################"+query);
+        query = query.substring(0, query.length() - 2);
+        System.out.println("####################" + query);
         em.getTransaction().begin();
         em.createNativeQuery(query).executeUpdate();
         em.getTransaction().commit();
@@ -107,6 +109,7 @@ public class QuizEndpoint {
         pojo.setIdquiz(q.getId().getId());
 
         DarkoResponse dr = new DarkoResponse(true, pojo, null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 
@@ -118,6 +121,7 @@ public class QuizEndpoint {
         List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.startdate > :startdate", Quiz.class).setParameter("startdate", new Date()).getResultList();
         List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 
@@ -130,6 +134,38 @@ public class QuizEndpoint {
         List<Quiz> resultList = em.createQuery("SELECT q FROM Quiz q WHERE q.id.id=:id AND q.enddate < :enddate", Quiz.class).setParameter("enddate", new Date()).setParameter("id", id).getResultList();
         List<QuizPojo> toQuizPojo = QuizPojo.toQuizPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
+        em.close();
+        return Response.ok().entity(dr).build();
+    }
+
+    @GET
+    @Path("pin/{pin}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response enterQuiz(@HeaderParam("authorization") String sid, @PathParam("pin") String pin) {
+        EntityManager em = EMF.createEntityManager();
+        try {
+            UserPlayer up = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", sid).getSingleResult();
+            RegistrationQuizTeam singleResult = em.createQuery("SELECT r from RegistrationQuizTeam r where r.pin=:pin", RegistrationQuizTeam.class).setParameter("pin", pin).getSingleResult();
+            up.getTeamList().add(singleResult.getIdteam());
+            DarkoResponse dr = new DarkoResponse(true, null, null);
+            em.close();
+            return Response.ok().entity(dr).build();
+        } catch (Exception e) {
+            DarkoResponse dr = new DarkoResponse(true, null, null);
+            return Response.ok().entity(dr).build();
+        }
+    }
+
+    @GET
+    @Path("admin/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getQuiz(@HeaderParam("authorization") String token, @PathParam("id") Integer id) {
+        EntityManager em = EMF.createEntityManager();
+        Integer idA = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
+        List<Stat> resultList = em.createNativeQuery("SELECT * FROM stat;", Stat.class).getResultList();
+//        QuizPojo toQuizPojo = new QuizPojo(resultList);
+        DarkoResponse dr = new DarkoResponse(true, resultList, null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 
@@ -173,11 +209,12 @@ public class QuizEndpoint {
             Pitanje pitanje = new Pitanje(col);
             System.out.println(pitanje.toString());
             DarkoResponse dr = new DarkoResponse(true, new Pitanje(col), null);
-            
+
             return Response.ok().entity(dr).build();
         }
         System.out.println("2222222222222222222222");
         DarkoResponse dr = new DarkoResponse(true, null, null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 
@@ -187,6 +224,7 @@ public class QuizEndpoint {
         EntityManager em = EMF.createEntityManager();
         List<QuizQuestion> resultList = em.createNamedQuery("QuizQuestion.findAll", QuizQuestion.class).getResultList();
         DarkoResponse dr = new DarkoResponse(true, new Pitanje(resultList.get(0)), null);
+        em.close();
         return Response.ok().entity(dr).build();
     }
 }

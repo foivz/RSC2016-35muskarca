@@ -81,6 +81,7 @@ public class UserEndpoint {
         }
         UserPojo ur = new UserPojo(user);
         ur.setToken(tokenHelper.encode(ur.getToken()));
+        em.close();
         DarkoResponse dr = new DarkoResponse(true, ur, null);
         return Response.ok().entity(dr).build();
     }
@@ -106,6 +107,7 @@ public class UserEndpoint {
             }
             UserPojo ur = new UserPojo(user);
             DarkoResponse dr = new DarkoResponse(true, ur, null);
+            em.close();
             return Response.ok().entity(dr).build();
         } catch (Exception e) {
             return Response.ok().entity(new DarkoResponse(false, null, "Ne valja token.")).build();

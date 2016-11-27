@@ -47,7 +47,7 @@ public class QuestionsEndpoint {
         Question q = QuestionPojo.createQuestion(pojo, id);
         manager.persist(em, q);
 
-
+        em.close();
         DarkoResponse dr = new DarkoResponse(true, null, null);
         return Response.ok().entity(dr).build();
     }
@@ -60,9 +60,10 @@ public class QuestionsEndpoint {
         System.out.println("**************");
         System.out.println(token);
         Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
-        
+
         List<Question> resultList = em.createQuery("SELECT q FROM Question q WHERE q.adminid.id=:id", Question.class).setParameter("id", id).getResultList();
         List<QuestionPojo> toQuizPojo = QuestionPojo.toQPojo(resultList);
+        em.close();
         DarkoResponse dr = new DarkoResponse(true, toQuizPojo, null);
         return Response.ok().entity(dr).build();
     }

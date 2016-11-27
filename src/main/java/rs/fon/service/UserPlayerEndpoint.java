@@ -69,6 +69,7 @@ public class UserPlayerEndpoint {
             System.out.println(loginPojo.getPushtoken());
             manager.merge(em, singleResult);
             System.out.println(singleResult.getPushtoken());
+            em.close();
         } catch (NoResultException e) {
             return Response.ok().entity(new DarkoResponse(false, null, "Korisnik ne postoji.")).build();
         }

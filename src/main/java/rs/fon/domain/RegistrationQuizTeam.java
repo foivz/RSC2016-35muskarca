@@ -21,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -36,6 +37,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "RegistrationQuizTeam.findAll", query = "SELECT r FROM RegistrationQuizTeam r"),
     @NamedQuery(name = "RegistrationQuizTeam.findByIdregistration", query = "SELECT r FROM RegistrationQuizTeam r WHERE r.idregistration = :idregistration")})
 public class RegistrationQuizTeam implements Serializable {
+    @Size(max = 255)
+    @Column(name = "pin")
+    private String pin;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,6 +119,14 @@ public class RegistrationQuizTeam implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.RegistrationQuizTeam[ idregistration=" + idregistration + " ]";
+    }
+
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
     }
     
 }
