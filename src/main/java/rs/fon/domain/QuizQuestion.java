@@ -27,20 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "QuizQuestion.findAll", query = "SELECT q FROM QuizQuestion q"),
-    @NamedQuery(name = "QuizQuestion.findByQuizId", query = "SELECT q FROM QuizQuestion q WHERE q.quizQuestionPK.quizId = :quizId"),
     @NamedQuery(name = "QuizQuestion.findByQuestionId", query = "SELECT q FROM QuizQuestion q WHERE q.quizQuestionPK.questionId = :questionId"),
     @NamedQuery(name = "QuizQuestion.findByTaken", query = "SELECT q FROM QuizQuestion q WHERE q.taken = :taken"),
-    @NamedQuery(name = "QuizQuestion.findByCorrect", query = "SELECT q FROM QuizQuestion q WHERE q.correct = :correct")})
+    @NamedQuery(name = "QuizQuestion.findByCorrect", query = "SELECT q FROM QuizQuestion q WHERE q.correct = :correct"),
+    @NamedQuery(name = "QuizQuestion.findByRegistrationId", query = "SELECT q FROM QuizQuestion q WHERE q.quizQuestionPK.registrationId = :registrationId")})
 public class QuizQuestion implements Serializable {
-    @JoinColumn(name = "user_id", referencedColumnName = "iduser_player", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private UserPlayer userPlayer;
-    @JoinColumn(name = "team_id", referencedColumnName = "idteam", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Team team;
-    @JoinColumn(name = "answer", referencedColumnName = "idanswer")
-    @ManyToOne
-    private Answer answer;
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected QuizQuestionPK quizQuestionPK;
@@ -55,9 +46,12 @@ public class QuizQuestion implements Serializable {
     @JoinColumn(name = "question_id", referencedColumnName = "idquestion", insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Question question;
-    @JoinColumn(name = "quiz_id", referencedColumnName = "idquiz", insertable = false, updatable = false)
+    @JoinColumn(name = "registration_id", referencedColumnName = "idregistration", insertable = false, updatable = false)
     @ManyToOne(optional = false)
-    private Quiz quiz;
+    private RegistrationQuizTeam registrationQuizTeam;
+    @JoinColumn(name = "user_id", referencedColumnName = "iduser_player")
+    @ManyToOne
+    private UserPlayer userId;
 
     public QuizQuestion() {
     }
@@ -72,8 +66,8 @@ public class QuizQuestion implements Serializable {
         this.correct = correct;
     }
 
-    public QuizQuestion(int quizId, int questionId) {
-        this.quizQuestionPK = new QuizQuestionPK(quizId, questionId);
+    public QuizQuestion(int questionId, int registrationId) {
+        this.quizQuestionPK = new QuizQuestionPK(questionId, registrationId);
     }
 
     public QuizQuestionPK getQuizQuestionPK() {
@@ -108,12 +102,20 @@ public class QuizQuestion implements Serializable {
         this.question = question;
     }
 
-    public Quiz getQuiz() {
-        return quiz;
+    public RegistrationQuizTeam getRegistrationQuizTeam() {
+        return registrationQuizTeam;
     }
 
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
+    public void setRegistrationQuizTeam(RegistrationQuizTeam registrationQuizTeam) {
+        this.registrationQuizTeam = registrationQuizTeam;
+    }
+
+    public UserPlayer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UserPlayer userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -139,30 +141,6 @@ public class QuizQuestion implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.QuizQuestion[ quizQuestionPK=" + quizQuestionPK + " ]";
-    }
-
-    public Answer getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
-    }
-
-    public UserPlayer getUserPlayer() {
-        return userPlayer;
-    }
-
-    public void setUserPlayer(UserPlayer userPlayer) {
-        this.userPlayer = userPlayer;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
     }
     
 }

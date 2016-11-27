@@ -13,11 +13,13 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import rs.fon.domain.Quiz;
 import rs.fon.domain.RegistrationQuizTeam;
 import rs.fon.domain.Team;
-import rs.fon.domain.TeamMember;
 import rs.fon.domain.UserPlayer;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
@@ -59,7 +61,7 @@ public class TeamEndpoint {
     @Path("")
     public Response getTeams(@HeaderParam("authorization") String socid) {
         EntityManager em = EMF.createEntityManager();
-        List<Team> resultList = em.createQuery("SELECT tm.idteam from TeamMember tm WHERE tm.iduser.socialnetid=:sid", Team.class).setParameter("sid", socid).getResultList();
+        List<Team> resultList = em.createQuery("SELECT tt from UserPlayer tm left join tm.teamList tt WHERE tm.socialnetid=:sid", Team.class).setParameter("sid", socid).getResultList();
         List<TeamPojo> toPojo = TeamPojo.toPojo(resultList);
         DarkoResponse dr = new DarkoResponse(true, toPojo, null);
         em.close();
@@ -67,15 +69,17 @@ public class TeamEndpoint {
     }
 
     @POST
+    @Path("{name}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response createTeam(@HeaderParam("authorization") String socid, @PathParam("name") String name) {
         EntityManager em = EMF.createEntityManager();
         Team t = new Team();
         t.setTeamname(name);
-        TeamMember teamMember = new TeamMember();
-        teamMember.setIdteam(t);
-        teamMember.setIduser(em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", socid).getSingleResult());
-        t.setTeamMemberList(Arrays.asList(teamMember));
+        UserPlayer singleResult = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", socid).getSingleResult();
+        t.setUserPlayerList(Arrays.asList(singleResult));
         manager.persist(em, t);
+        singleResult.setTeamList(Arrays.asList(t));
+        manager.persist(em, singleResult);
         DarkoResponse dr = new DarkoResponse(true, true, null);
         em.close();
         return Response.ok().entity(dr).build();

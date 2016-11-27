@@ -8,6 +8,8 @@ package rs.fon.service;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+import rs.fon.pojo.DarkoResponse;
+import rs.fon.pojo.Pitanje;
 
 /**
  *

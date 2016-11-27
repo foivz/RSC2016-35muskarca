@@ -19,27 +19,19 @@ import javax.validation.constraints.NotNull;
 public class QuizQuestionPK implements Serializable {
     @Basic(optional = false)
     @NotNull
-    @Column(name = "quiz_id")
-    private int quizId;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "question_id")
     private int questionId;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "registration_id")
+    private int registrationId;
 
     public QuizQuestionPK() {
     }
 
-    public QuizQuestionPK(int quizId, int questionId) {
-        this.quizId = quizId;
+    public QuizQuestionPK(int questionId, int registrationId) {
         this.questionId = questionId;
-    }
-
-    public int getQuizId() {
-        return quizId;
-    }
-
-    public void setQuizId(int quizId) {
-        this.quizId = quizId;
+        this.registrationId = registrationId;
     }
 
     public int getQuestionId() {
@@ -50,11 +42,19 @@ public class QuizQuestionPK implements Serializable {
         this.questionId = questionId;
     }
 
+    public int getRegistrationId() {
+        return registrationId;
+    }
+
+    public void setRegistrationId(int registrationId) {
+        this.registrationId = registrationId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) quizId;
         hash += (int) questionId;
+        hash += (int) registrationId;
         return hash;
     }
 
@@ -65,10 +65,10 @@ public class QuizQuestionPK implements Serializable {
             return false;
         }
         QuizQuestionPK other = (QuizQuestionPK) object;
-        if (this.quizId != other.quizId) {
+        if (this.questionId != other.questionId) {
             return false;
         }
-        if (this.questionId != other.questionId) {
+        if (this.registrationId != other.registrationId) {
             return false;
         }
         return true;
@@ -76,7 +76,7 @@ public class QuizQuestionPK implements Serializable {
 
     @Override
     public String toString() {
-        return "rs.fon.domain.QuizQuestionPK[ quizId=" + quizId + ", questionId=" + questionId + " ]";
+        return "rs.fon.domain.QuizQuestionPK[ questionId=" + questionId + ", registrationId=" + registrationId + " ]";
     }
     
 }

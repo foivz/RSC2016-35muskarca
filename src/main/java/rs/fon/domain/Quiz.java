@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -46,14 +45,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Quiz.findByStartdate", query = "SELECT q FROM Quiz q WHERE q.startdate = :startdate"),
     @NamedQuery(name = "Quiz.findByEnddate", query = "SELECT q FROM Quiz q WHERE q.enddate = :enddate")})
 public class Quiz implements Serializable {
-    @ManyToMany(mappedBy = "quizList")
-    private List<Question> questionList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quiz")
-    private List<QuizQuestion> quizQuestionList;
-    @OneToMany(mappedBy = "idquiz")
-    private List<RegistrationQuizTeam> registrationQuizTeamList;
     private static final long serialVersionUID = 1L;
     @Id
+    @Basic(optional = false)
     @NotNull
     @Column(name = "idquiz")
     private Integer idquiz;
@@ -76,9 +70,13 @@ public class Quiz implements Serializable {
     @Column(name = "enddate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date enddate;
+    @ManyToMany(mappedBy = "quizList")
+    private List<Question> questionList;
     @JoinColumn(name = "id", referencedColumnName = "id")
     @ManyToOne
     private UserAccount id;
+    @OneToMany(mappedBy = "idquiz")
+    private List<RegistrationQuizTeam> registrationQuizTeamList;
 
     public Quiz() {
     }
@@ -151,12 +149,32 @@ public class Quiz implements Serializable {
         this.enddate = enddate;
     }
 
+    @XmlTransient
+    @JsonIgnore
+    public List<Question> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(List<Question> questionList) {
+        this.questionList = questionList;
+    }
+
     public UserAccount getId() {
         return id;
     }
 
     public void setId(UserAccount id) {
         this.id = id;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<RegistrationQuizTeam> getRegistrationQuizTeamList() {
+        return registrationQuizTeamList;
+    }
+
+    public void setRegistrationQuizTeamList(List<RegistrationQuizTeam> registrationQuizTeamList) {
+        this.registrationQuizTeamList = registrationQuizTeamList;
     }
 
     @Override
@@ -182,36 +200,6 @@ public class Quiz implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.Quiz[ idquiz=" + idquiz + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<RegistrationQuizTeam> getRegistrationQuizTeamList() {
-        return registrationQuizTeamList;
-    }
-
-    public void setRegistrationQuizTeamList(List<RegistrationQuizTeam> registrationQuizTeamList) {
-        this.registrationQuizTeamList = registrationQuizTeamList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<QuizQuestion> getQuizQuestionList() {
-        return quizQuestionList;
-    }
-
-    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
-        this.quizQuestionList = quizQuestionList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Question> getQuestionList() {
-        return questionList;
-    }
-
-    public void setQuestionList(List<Question> questionList) {
-        this.questionList = questionList;
     }
     
 }

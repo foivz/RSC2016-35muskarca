@@ -40,16 +40,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Question.findByQuestion", query = "SELECT q FROM Question q WHERE q.question = :question"),
     @NamedQuery(name = "Question.findByType", query = "SELECT q FROM Question q WHERE q.type = :type")})
 public class Question implements Serializable {
-    @JoinTable(name = "mladenquiz", joinColumns = {
-        @JoinColumn(name = "idquestion1", referencedColumnName = "idquestion")}, inverseJoinColumns = {
-        @JoinColumn(name = "idquiz1", referencedColumnName = "idquiz")})
-    @ManyToMany
-    private List<Quiz> quizList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
-    private List<QuizQuestion> quizQuestionList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "idquestion")
     private Integer idquestion;
     @Size(max = 255)
@@ -57,8 +51,11 @@ public class Question implements Serializable {
     private String question;
     @Column(name = "type")
     private Integer type;
-    @OneToMany(mappedBy = "question")
-    private List<UserAnswer> userAnswerList;
+    @JoinTable(name = "mladenquiz", joinColumns = {
+        @JoinColumn(name = "idquestion1", referencedColumnName = "idquestion")}, inverseJoinColumns = {
+        @JoinColumn(name = "idquiz1", referencedColumnName = "idquiz")})
+    @ManyToMany
+    private List<Quiz> quizList;
     @OneToMany(mappedBy = "questionid")
     private List<Answer> answerList;
     @JoinColumn(name = "adminid", referencedColumnName = "id")
@@ -67,6 +64,8 @@ public class Question implements Serializable {
     @JoinColumn(name = "categoryid", referencedColumnName = "idcategory")
     @ManyToOne
     private Category categoryid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "question")
+    private List<QuizQuestion> quizQuestionList;
 
     public Question() {
     }
@@ -101,12 +100,12 @@ public class Question implements Serializable {
 
     @XmlTransient
     @JsonIgnore
-    public List<UserAnswer> getUserAnswerList() {
-        return userAnswerList;
+    public List<Quiz> getQuizList() {
+        return quizList;
     }
 
-    public void setUserAnswerList(List<UserAnswer> userAnswerList) {
-        this.userAnswerList = userAnswerList;
+    public void setQuizList(List<Quiz> quizList) {
+        this.quizList = quizList;
     }
 
     @XmlTransient
@@ -135,6 +134,16 @@ public class Question implements Serializable {
         this.categoryid = categoryid;
     }
 
+    @XmlTransient
+    @JsonIgnore
+    public List<QuizQuestion> getQuizQuestionList() {
+        return quizQuestionList;
+    }
+
+    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
+        this.quizQuestionList = quizQuestionList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -158,26 +167,6 @@ public class Question implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.Question[ idquestion=" + idquestion + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<QuizQuestion> getQuizQuestionList() {
-        return quizQuestionList;
-    }
-
-    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
-        this.quizQuestionList = quizQuestionList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Quiz> getQuizList() {
-        return quizList;
-    }
-
-    public void setQuizList(List<Quiz> quizList) {
-        this.quizList = quizList;
     }
     
 }

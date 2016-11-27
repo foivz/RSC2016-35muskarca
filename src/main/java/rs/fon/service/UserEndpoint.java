@@ -99,7 +99,7 @@ public class UserEndpoint {
                         .createQuery("SELECT u FROM UserAccount u WHERE u.token = :token")
                         .setParameter("token", tokenHelper.decode(token))
                         .getSingleResult();
-                user.setPushToken(userPushToken.getPushtoken());
+                user.setPushtoken(userPushToken.getPushtoken());
                 manager.merge(em, user);
             } catch (NoResultException e) {
                 return Response.ok().entity(new DarkoResponse(false, null, "Token ne valja")).build();

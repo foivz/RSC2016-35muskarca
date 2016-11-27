@@ -40,7 +40,7 @@ public class UserPojo {
         this.password = account.getPassword();
         this.token = account.getToken();
         this.fullname = account.getFullname();
-        this.pushToken = account.getPushToken();
+        this.pushToken = account.getPushtoken();
     }
 
     public static List<UserPojo> getList(List<UserAccount> userAccountList) {

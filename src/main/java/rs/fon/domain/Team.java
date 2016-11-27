@@ -8,7 +8,6 @@ package rs.fon.domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,22 +35,19 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Team.findByIdteam", query = "SELECT t FROM Team t WHERE t.idteam = :idteam"),
     @NamedQuery(name = "Team.findByTeamname", query = "SELECT t FROM Team t WHERE t.teamname = :teamname")})
 public class Team implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "team")
-    private List<QuizQuestion> quizQuestionList;
-    @ManyToMany(mappedBy = "teamList")
-    private List<UserPlayer> userPlayerList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "idteam")
     private Integer idteam;
     @Size(max = 255)
     @Column(name = "teamname")
     private String teamname;
+    @ManyToMany(mappedBy = "teamList")
+    private List<UserPlayer> userPlayerList;
     @OneToMany(mappedBy = "idteam")
     private List<RegistrationQuizTeam> registrationQuizTeamList;
-    @OneToMany(mappedBy = "idteam")
-    private List<TeamMember> teamMemberList;
 
     public Team() {
     }
@@ -78,22 +74,22 @@ public class Team implements Serializable {
 
     @XmlTransient
     @JsonIgnore
+    public List<UserPlayer> getUserPlayerList() {
+        return userPlayerList;
+    }
+
+    public void setUserPlayerList(List<UserPlayer> userPlayerList) {
+        this.userPlayerList = userPlayerList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
     public List<RegistrationQuizTeam> getRegistrationQuizTeamList() {
         return registrationQuizTeamList;
     }
 
     public void setRegistrationQuizTeamList(List<RegistrationQuizTeam> registrationQuizTeamList) {
         this.registrationQuizTeamList = registrationQuizTeamList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<TeamMember> getTeamMemberList() {
-        return teamMemberList;
-    }
-
-    public void setTeamMemberList(List<TeamMember> teamMemberList) {
-        this.teamMemberList = teamMemberList;
     }
 
     @Override
@@ -119,26 +115,6 @@ public class Team implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.Team[ idteam=" + idteam + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<UserPlayer> getUserPlayerList() {
-        return userPlayerList;
-    }
-
-    public void setUserPlayerList(List<UserPlayer> userPlayerList) {
-        this.userPlayerList = userPlayerList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<QuizQuestion> getQuizQuestionList() {
-        return quizQuestionList;
-    }
-
-    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
-        this.quizQuestionList = quizQuestionList;
     }
     
 }

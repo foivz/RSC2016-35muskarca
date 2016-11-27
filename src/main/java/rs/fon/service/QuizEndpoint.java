@@ -8,6 +8,7 @@ package rs.fon.service;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import javax.persistence.EntityManager;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -23,12 +24,14 @@ import rs.fon.domain.Answer;
 import rs.fon.domain.Question;
 import rs.fon.domain.Quiz;
 import rs.fon.domain.QuizQuestion;
+import rs.fon.domain.RegistrationQuizTeam;
 import rs.fon.domain.Team;
 import rs.fon.domain.UserAccount;
 import rs.fon.domain.UserPlayer;
 import rs.fon.emf.EMF;
 import rs.fon.emf.Manager;
 import rs.fon.pojo.DarkoResponse;
+import rs.fon.pojo.Pitanje;
 import rs.fon.pojo.QuestionAnswerPojo;
 import rs.fon.pojo.QuizPojo;
 import rs.fon.token.AbstractTokenCreator;
@@ -111,42 +114,45 @@ public class QuizEndpoint {
         EntityManager em = EMF.createEntityManager();
 //        Integer id = Integer.parseInt(tokenHelper.decode(token).split("##")[1]);
         UserPlayer singleResult = em.createNamedQuery("UserPlayer.findBySocialnetid", UserPlayer.class).setParameter("socialnetid", socid).getSingleResult();
+        QuizQuestion qq = em.createQuery("select qq from QuizQuestion qq where qq.quizQuestionPK.questionId=:a1 AND qq.quizQuestionPK.registrationId=:a2", QuizQuestion.class).setParameter("a1", qa.getQuestionId()).setParameter("a2", qa.getRegistrationId()).getSingleResult();
 
         //odgovorio
-        if (qa.getQuestionid() != null && qa.getAnswerid() != null) {
-            QuizQuestion qq = new QuizQuestion();
-            qq.setUserPlayer(singleResult);
-            qq.setTeam(new Team(qa.getTeamId()));
-            qq.setQuiz(new Quiz(qa.getQuizid()));
-            qq.setQuestion(new Question(qa.getQuestionid()));
-            qq.setAnswer(new Answer(qa.getAnswerid()));
+        if (qa.getQuestionId() != null && qa.isAnswered()) {
+            qq.setUserId(singleResult);
             qq.setTaken(true);
+            qq.setCorrect(qa.isCorrect());
             manager.merge(em, qq);
         }
         //pass
-        if (qa.getQuestionid() != null && qa.getAnswerid() == null) {
-            QuizQuestion qq = new QuizQuestion();
-            qq.setUserPlayer(null);
-            qq.setAnswer(null);
+        if (qa.getQuestionId() != null && !qa.isAnswered()) {
+            qq.setUserId(null);
             qq.setTaken(false);
 //            qq.setQuiz(new Quiz(qa.getQuizid()));
 //            qq.setQuestion(new Question(qa.getQuestionid()));
             manager.merge(em, qq);
         }
         //novo pitanje
-        Quiz quiz = em.createQuery("SELECT q FROM Quiz q WHERE q.id.id=:id", Quiz.class).setParameter("id", qa.getQuizid()).getSingleResult();
-        for (QuizQuestion col : quiz.getQuizQuestionList()) {
-            if (!col.getTaken() && col.getAnswer() != null) {
-                col.setTaken(true);
-                col.setUserPlayer(singleResult);
-                manager.merge(em, col);
+        List<QuizQuestion> quizs = em.createQuery("SELECT q FROM QuizQuestion q WHERE q.registrationQuizTeam.idregistration =:idr AND q.taken = false", QuizQuestion.class).setParameter("idr", qa.getRegistrationId()).getResultList();
+        Random r = new Random();
+        if (quizs != null && !quizs.isEmpty()) {
+            QuizQuestion col = quizs.get(r.nextInt(quizs.size() - 1));
+            col.setTaken(true);
+            col.setUserId(singleResult);
+            manager.merge(em, col);
 
-                DarkoResponse dr = new DarkoResponse(true, col, null);
-                return Response.ok().entity(dr).build();
-            }
+            DarkoResponse dr = new DarkoResponse(true, new Pitanje(col), null);
+            return Response.ok().entity(dr).build();
         }
         DarkoResponse dr = new DarkoResponse(true, false, null);
         return Response.ok().entity(dr).build();
     }
 
+    @GET
+    @Path("jebo")
+    public Response a() {
+        EntityManager em = EMF.createEntityManager();
+        List<QuizQuestion> resultList = em.createNamedQuery("QuizQuestion.findAll", QuizQuestion.class).getResultList();
+        DarkoResponse dr = new DarkoResponse(true, new Pitanje(resultList.get(0)), null);
+        return Response.ok().entity(dr).build();
+    }
 }

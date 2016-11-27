@@ -6,7 +6,6 @@
 package rs.fon.domain;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,13 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -36,10 +32,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "Answer.findByAnswer", query = "SELECT a FROM Answer a WHERE a.answer = :answer"),
     @NamedQuery(name = "Answer.findByFlag", query = "SELECT a FROM Answer a WHERE a.flag = :flag")})
 public class Answer implements Serializable {
-    @OneToMany(mappedBy = "answer")
-    private List<QuizQuestion> quizQuestionList;
     private static final long serialVersionUID = 1L;
     @Id
+    @Basic(optional = false)
     @NotNull
     @Column(name = "idanswer")
     private Integer idanswer;
@@ -114,16 +109,6 @@ public class Answer implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.Answer[ idanswer=" + idanswer + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<QuizQuestion> getQuizQuestionList() {
-        return quizQuestionList;
-    }
-
-    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
-        this.quizQuestionList = quizQuestionList;
     }
     
 }

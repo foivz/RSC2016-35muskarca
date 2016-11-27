@@ -36,16 +36,14 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "UserAccount.findByUsername", query = "SELECT u FROM UserAccount u WHERE u.username = :username"),
     @NamedQuery(name = "UserAccount.findByPassword", query = "SELECT u FROM UserAccount u WHERE u.password = :password"),
     @NamedQuery(name = "UserAccount.findByToken", query = "SELECT u FROM UserAccount u WHERE u.token = :token"),
-    @NamedQuery(name = "UserAccount.findByFullname", query = "SELECT u FROM UserAccount u WHERE u.fullname = :fullname")})
+    @NamedQuery(name = "UserAccount.findByFullname", query = "SELECT u FROM UserAccount u WHERE u.fullname = :fullname"),
+    @NamedQuery(name = "UserAccount.findByPushtoken", query = "SELECT u FROM UserAccount u WHERE u.pushtoken = :pushtoken")})
 public class UserAccount implements Serializable {
-    @OneToMany(mappedBy = "adminid")
-    private List<Question> questionList;
-    @OneToMany(mappedBy = "id")
-    private List<Quiz> quizList;
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     @Basic(optional = false)
     @NotNull
@@ -58,14 +56,18 @@ public class UserAccount implements Serializable {
     @Column(name = "password")
     private String password;
     @Size(max = 255)
-    @Column(name = "pushtoken")
-    private String pushToken;
-    @Size(max = 255)
     @Column(name = "token")
     private String token;
     @Size(max = 255)
     @Column(name = "fullname")
     private String fullname;
+    @Size(max = 255)
+    @Column(name = "pushtoken")
+    private String pushtoken;
+    @OneToMany(mappedBy = "id")
+    private List<Quiz> quizList;
+    @OneToMany(mappedBy = "adminid")
+    private List<Question> questionList;
 
     public UserAccount() {
     }
@@ -120,12 +122,32 @@ public class UserAccount implements Serializable {
         this.fullname = fullname;
     }
 
-    public String getPushToken() {
-        return pushToken;
+    public String getPushtoken() {
+        return pushtoken;
     }
 
-    public void setPushToken(String pushToken) {
-        this.pushToken = pushToken;
+    public void setPushtoken(String pushtoken) {
+        this.pushtoken = pushtoken;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Quiz> getQuizList() {
+        return quizList;
+    }
+
+    public void setQuizList(List<Quiz> quizList) {
+        this.quizList = quizList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Question> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(List<Question> questionList) {
+        this.questionList = questionList;
     }
 
     @Override
@@ -151,26 +173,6 @@ public class UserAccount implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.UserAccount[ id=" + id + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Quiz> getQuizList() {
-        return quizList;
-    }
-
-    public void setQuizList(List<Quiz> quizList) {
-        this.quizList = quizList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Question> getQuestionList() {
-        return questionList;
-    }
-
-    public void setQuestionList(List<Question> questionList) {
-        this.questionList = questionList;
     }
     
 }

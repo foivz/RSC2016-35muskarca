@@ -8,6 +8,7 @@ package rs.fon.domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,11 +35,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "RegistrationQuizTeam.findAll", query = "SELECT r FROM RegistrationQuizTeam r"),
     @NamedQuery(name = "RegistrationQuizTeam.findByIdregistration", query = "SELECT r FROM RegistrationQuizTeam r WHERE r.idregistration = :idregistration")})
 public class RegistrationQuizTeam implements Serializable {
-    @OneToMany(mappedBy = "registration")
-    private List<UserAnswer> userAnswerList;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
     @Column(name = "idregistration")
     private Integer idregistration;
     @JoinColumn(name = "idquiz", referencedColumnName = "idquiz")
@@ -47,6 +47,8 @@ public class RegistrationQuizTeam implements Serializable {
     @JoinColumn(name = "idteam", referencedColumnName = "idteam")
     @ManyToOne
     private Team idteam;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationQuizTeam")
+    private List<QuizQuestion> quizQuestionList;
 
     public RegistrationQuizTeam() {
     }
@@ -79,6 +81,16 @@ public class RegistrationQuizTeam implements Serializable {
         this.idteam = idteam;
     }
 
+    @XmlTransient
+    @JsonIgnore
+    public List<QuizQuestion> getQuizQuestionList() {
+        return quizQuestionList;
+    }
+
+    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
+        this.quizQuestionList = quizQuestionList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -102,16 +114,6 @@ public class RegistrationQuizTeam implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.RegistrationQuizTeam[ idregistration=" + idregistration + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<UserAnswer> getUserAnswerList() {
-        return userAnswerList;
-    }
-
-    public void setUserAnswerList(List<UserAnswer> userAnswerList) {
-        this.userAnswerList = userAnswerList;
     }
     
 }

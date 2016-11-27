@@ -8,7 +8,6 @@ package rs.fon.domain;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,13 +41,36 @@ import org.codehaus.jackson.annotate.JsonIgnore;
     @NamedQuery(name = "UserPlayer.findByRang", query = "SELECT u FROM UserPlayer u WHERE u.rang = :rang"),
     @NamedQuery(name = "UserPlayer.findByBadge", query = "SELECT u FROM UserPlayer u WHERE u.badge = :badge"),
     @NamedQuery(name = "UserPlayer.findByPushtoken", query = "SELECT u FROM UserPlayer u WHERE u.pushtoken = :pushtoken"),
-    @NamedQuery(name = "UserPlayer.findByToken", query = "SELECT u FROM UserPlayer u WHERE u.token = :token")})
+    @NamedQuery(name = "UserPlayer.findByToken", query = "SELECT u FROM UserPlayer u WHERE u.token = :token"),
+    @NamedQuery(name = "UserPlayer.findByEmail", query = "SELECT u FROM UserPlayer u WHERE u.email = :email"),
+    @NamedQuery(name = "UserPlayer.findByImage", query = "SELECT u FROM UserPlayer u WHERE u.image = :image")})
 public class UserPlayer implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userPlayer")
-    private List<QuizQuestion> quizQuestionList;
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "iduser_player")
+    private Integer iduserPlayer;
+    @Size(max = 255)
+    @Column(name = "name")
+    private String name;
+    @Size(max = 255)
+    @Column(name = "surname")
+    private String surname;
     @Size(max = 255)
     @Column(name = "socialnetid")
     private String socialnetid;
+    @Size(max = 255)
+    @Column(name = "rang")
+    private String rang;
+    @Column(name = "badge")
+    private Integer badge;
+    @Size(max = 255)
+    @Column(name = "pushtoken")
+    private String pushtoken;
+    @Size(max = 255)
+    @Column(name = "token")
+    private String token;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 255)
     @Column(name = "email")
@@ -61,32 +83,8 @@ public class UserPlayer implements Serializable {
         @JoinColumn(name = "idteam", referencedColumnName = "idteam")})
     @ManyToMany
     private List<Team> teamList;
-    @OneToMany(mappedBy = "iduser")
-    private List<UserAnswer> userAnswerList;
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iduser_player")
-    private Integer iduserPlayer;
-    @Size(max = 255)
-    @Column(name = "name")
-    private String name;
-    @Size(max = 255)
-    @Column(name = "surname")
-    private String surname;
-    @Size(max = 255)
-    @Column(name = "rang")
-    private String rang;
-    @Column(name = "badge")
-    private Integer badge;
-    @Size(max = 255)
-    @Column(name = "pushtoken")
-    private String pushtoken;
-    @Size(max = 255)
-    @Column(name = "token")
-    private String token;
-    @OneToMany(mappedBy = "iduser")
-    private List<TeamMember> teamMemberList;
+    @OneToMany(mappedBy = "userId")
+    private List<QuizQuestion> quizQuestionList;
 
     public UserPlayer() {
     }
@@ -119,6 +117,13 @@ public class UserPlayer implements Serializable {
         this.surname = surname;
     }
 
+    public String getSocialnetid() {
+        return socialnetid;
+    }
+
+    public void setSocialnetid(String socialnetid) {
+        this.socialnetid = socialnetid;
+    }
 
     public String getRang() {
         return rang;
@@ -152,14 +157,40 @@ public class UserPlayer implements Serializable {
         this.token = token;
     }
 
-    @XmlTransient
-    @JsonIgnore
-    public List<TeamMember> getTeamMemberList() {
-        return teamMemberList;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTeamMemberList(List<TeamMember> teamMemberList) {
-        this.teamMemberList = teamMemberList;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Team> getTeamList() {
+        return teamList;
+    }
+
+    public void setTeamList(List<Team> teamList) {
+        this.teamList = teamList;
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<QuizQuestion> getQuizQuestionList() {
+        return quizQuestionList;
+    }
+
+    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
+        this.quizQuestionList = quizQuestionList;
     }
 
     @Override
@@ -185,60 +216,6 @@ public class UserPlayer implements Serializable {
     @Override
     public String toString() {
         return "rs.fon.domain.UserPlayer[ iduserPlayer=" + iduserPlayer + " ]";
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<Team> getTeamList() {
-        return teamList;
-    }
-
-    public void setTeamList(List<Team> teamList) {
-        this.teamList = teamList;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<UserAnswer> getUserAnswerList() {
-        return userAnswerList;
-    }
-
-    public void setUserAnswerList(List<UserAnswer> userAnswerList) {
-        this.userAnswerList = userAnswerList;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public String getSocialnetid() {
-        return socialnetid;
-    }
-
-    public void setSocialnetid(String socialnetid) {
-        this.socialnetid = socialnetid;
-    }
-
-    @XmlTransient
-    @JsonIgnore
-    public List<QuizQuestion> getQuizQuestionList() {
-        return quizQuestionList;
-    }
-
-    public void setQuizQuestionList(List<QuizQuestion> quizQuestionList) {
-        this.quizQuestionList = quizQuestionList;
     }
     
 }

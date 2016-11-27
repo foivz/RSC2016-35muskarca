@@ -5,58 +5,53 @@
  */
 package rs.fon.pojo;
 
+import java.util.List;
+
 /**
  *
  * @author stefan
  */
 public class QuestionAnswerPojo {
-    private Integer quizid;
-    private Integer questionid;
-    private Integer answerid;
-    private Integer userId;
-    private Integer teamId;
+    private Integer registrationId;
+    private Integer questionId;
+    private Boolean answered;
+//    private Integer userId;
+//    private Integer teamId;
+    private Boolean correct;
 
     public QuestionAnswerPojo() {
     }
-
-    public Integer getQuizid() {
-        return quizid;
-    }
-
-    public void setQuizid(Integer quizid) {
-        this.quizid = quizid;
-    }
-
-    public Integer getQuestionid() {
-        return questionid;
-    }
-
-    public void setQuestionid(Integer questionid) {
-        this.questionid = questionid;
-    }
-
-    public Integer getAnswerid() {
-        return answerid;
-    }
-
-    public void setAnswerid(Integer answerid) {
-        this.answerid = answerid;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
-    }
     
+    public Boolean isCorrect() {
+        return correct;
+    }
+
+    public void setCorrect(Boolean correct) {
+        this.correct = correct;
+    }
+
+    public Boolean isAnswered() {
+        return answered;
+    }
+
+    public void setAnswered(Boolean answered) {
+        this.answered = answered;
+    }
+
+    public Integer getRegistrationId() {
+        return registrationId;
+    }
+
+    public void setRegistrationId(Integer registrationId) {
+        this.registrationId = registrationId;
+    }
+
+    public Integer getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
+    }
+
 }
